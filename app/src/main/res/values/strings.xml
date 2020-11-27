@@ -1,3 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">LimeBrowser</string>
+    <string name="btn_text" tools:ignore="ExtraTranslation">Open LimeBrowser</string>
+
 </resources>

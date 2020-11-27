@@ -3,7 +3,7 @@
     package="com.snxun.limebrowser">
 
     <application>
-        <activity android:name=".home.LimeBrowserActivity">
+        <activity android:name=".ui.LimeBrowserActivity">
             <intent-filter>
                 <category android:name="android.intent.category.TAB" />
             </intent-filter>

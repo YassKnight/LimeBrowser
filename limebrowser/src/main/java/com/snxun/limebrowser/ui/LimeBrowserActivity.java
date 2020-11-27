@@ -1,4 +1,4 @@
-package com.snxun.limebrowser.home;
+package com.snxun.limebrowser.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,7 @@ public class LimeBrowserActivity extends AbsActivity {
         intent.setClass(context, LimeBrowserActivity.class);
         context.startActivity(intent);
     }
+
 
     @Override
     protected int getAbsLayoutId() {

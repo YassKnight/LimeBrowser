@@ -1,22 +1,22 @@
 package com.snxun.limebrowser;
 
-import android.os.Bundle;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.lodz.android.pandora.base.activity.AbsActivity;
+import com.snxun.limebrowser.ui.LimeBrowserActivity;
 
-import com.snxun.limebrowser.home.LimeBrowserActivity;
-
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AbsActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
+    protected int getAbsLayoutId() {
+        return R.layout.activity_main;
     }
 
     public void startBrowser(View view) {
         LimeBrowserActivity.start(this);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
     }
 }

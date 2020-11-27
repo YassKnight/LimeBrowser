@@ -31,4 +31,9 @@ dependencies {
 
     //组件库
     implementation 'com.lodz:pandora:1.5.0'
+
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    //动画框架
+    implementation 'com.airbnb.android:lottie:3.5.0'
 }
