@@ -1,0 +1,5 @@
+<resources>
+    <string name="item_app_name">YourAppName</string>
+    <string name="main_exit_app">再按一次返回键,可直接退出程序</string>
+    <string name="home_title_name">主页</string>
+</resources>

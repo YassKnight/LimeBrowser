@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
 }
 
 android {
@@ -7,12 +7,12 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.snxun.limebrowser"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -29,19 +29,6 @@ android {
 
 dependencies {
 
-    //引入青柠浏览器库
-    implementation project(':limebrowser')
-
     //组件库
     implementation 'com.lodz:pandora:1.5.0'
-
-    // butterknife
-    implementation 'com.jakewharton:butterknife:10.2.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
-
-    //图片加载库
-    implementation 'com.lodz:imageloader-kt:1.1.5'
-
-    //LeakCanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 }
