@@ -1,13 +1,8 @@
-package com.snxun.limebrowser.webview.webview;
+package com.snxun.limebrowser.module.webview.webview;
 
-import android.app.Application;
 import android.graphics.Bitmap;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
-
-import com.snxun.limebrowser.application.BaseApplication;
-
-import java.util.ArrayList;
 
 /**
  * Created by Yangjw on 2020/11/26.

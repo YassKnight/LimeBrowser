@@ -1,6 +1,6 @@
-package com.snxun.limebrowser.webview.page;
+package com.snxun.limebrowser.module.webview.page;
 
-import com.snxun.limebrowser.webview.webview.CustomWebview;
+import com.snxun.limebrowser.module.webview.webview.CustomWebview;
 
 /**
  * webview具体的页面信息

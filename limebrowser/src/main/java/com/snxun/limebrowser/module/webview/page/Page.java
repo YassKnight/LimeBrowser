@@ -1,6 +1,4 @@
-package com.snxun.limebrowser.webview.page;
-
-import android.graphics.Bitmap;
+package com.snxun.limebrowser.module.webview.page;
 
 /**
  * 抽象的页面信息

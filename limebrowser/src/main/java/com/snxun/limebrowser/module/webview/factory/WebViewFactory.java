@@ -1,5 +1,6 @@
-package com.snxun.limebrowser.webview.factory;
+package com.snxun.limebrowser.module.webview.factory;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.View;
@@ -36,6 +37,7 @@ public class WebViewFactory implements ViewFactory {
      *
      * @param webView
      */
+    @SuppressLint("SetJavaScriptEnabled")
     public void initWebSetting(WebView webView) {
         WebSettings webSettings = webView.getSettings();
         //设置支持缩放
@@ -69,10 +71,8 @@ public class WebViewFactory implements ViewFactory {
         webView.setScrollbarFadingEnabled(true);
         webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            // Remote Web Debugging is always enabled, where available.
-            WebView.setWebContentsDebuggingEnabled(true);
+        // Remote Web Debugging is always enabled, where available.
+        WebView.setWebContentsDebuggingEnabled(true);
 
-        }
     }
 }

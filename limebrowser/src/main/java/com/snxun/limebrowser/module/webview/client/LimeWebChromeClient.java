@@ -1,4 +1,4 @@
-package com.snxun.limebrowser.webview.client;
+package com.snxun.limebrowser.module.webview.client;
 
 import android.graphics.Bitmap;
 import android.view.View;

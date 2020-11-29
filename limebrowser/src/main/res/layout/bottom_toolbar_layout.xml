@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.snxun.limebrowser.widget.LimeBottomView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.snxun.limebrowser.module.bottomview.LimeBottomView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_alignParentBottom="true"
@@ -81,4 +81,4 @@
 
     </LinearLayout>
 
-</com.snxun.limebrowser.widget.LimeBottomView>
+</com.snxun.limebrowser.module.bottomview.LimeBottomView>

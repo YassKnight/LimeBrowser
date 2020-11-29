@@ -1,4 +1,4 @@
-package com.snxun.limebrowser.widget;
+package com.snxun.limebrowser.module.topview;
 
 import android.content.Context;
 import android.util.AttributeSet;

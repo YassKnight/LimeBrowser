@@ -1,4 +1,4 @@
-package com.snxun.limebrowser.widget;
+package com.snxun.limebrowser.module.bottomview;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -23,8 +23,5 @@ public class LimeBottomView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public LimeBottomView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
 
 }

@@ -11,7 +11,10 @@
         android:background="@color/color_807FFFD4">
 
 
-        <include layout="@layout/root_layout" />
+        <include
+            android:id="@+id/home_root_layout"
+            layout="@layout/root_layout" />
+
     </FrameLayout>
 
     <include

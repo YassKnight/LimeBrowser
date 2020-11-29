@@ -1,4 +1,4 @@
-package com.snxun.limebrowser.webview.factory;
+package com.snxun.limebrowser.module.webview.factory;
 
 import android.content.Context;
 import android.view.View;
