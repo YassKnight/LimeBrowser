@@ -8,6 +8,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#e2e2e2</color>
+    <color name="transparent">#00000000</color>
+    <color name="windowLight">#ffffffff</color>
+    <color name="windowGrayL">#1b1b1b</color>
+    <color name="windowGrayM">#151515</color>
+    <color name="pureBlack">#ff000000</color>
+    <color name="themePink">#ff8585</color>
+    <color name="themeBlue">#41a7df</color>
+    <color name="deepGray">#686767</color>
+    <color name="lightBlack">#55000000</color>
+    <color name="lightGray">#f5f5f5</color>
     <color name="color_eeeeee">#eeeeee</color>
     <color name="color_666666">#666666</color>
     <color name="color_80C0C0C0">#80C0C0C0</color>

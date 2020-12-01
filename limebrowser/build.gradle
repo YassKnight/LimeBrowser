@@ -37,7 +37,6 @@ dependencies {
     //动画框架
     implementation 'com.airbnb.android:lottie:3.5.0'
 
-
     //图片加载库
     implementation 'com.lodz:imageloader-kt:1.1.5'
 }

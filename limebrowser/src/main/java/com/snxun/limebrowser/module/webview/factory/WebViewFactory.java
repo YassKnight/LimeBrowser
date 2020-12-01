@@ -3,6 +3,7 @@ package com.snxun.limebrowser.module.webview.factory;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebSettings;
@@ -15,21 +16,21 @@ import com.snxun.limebrowser.constant.Constants;
  * Created by Yangjw on 2020/11/26.
  */
 public class WebViewFactory implements ViewFactory {
-    private WebView mWebView;
     private Context mContext;
 
+    public WebViewFactory(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    private WebView instantiateWebView(AttributeSet attrs, int defStyle) {
+        return new WebView(mContext, attrs, defStyle);
+    }
 
     @Override
-    public View create(Context context, int type) {
-        this.mContext = context;
-        //如果需要多种webview类型，可以扩展
-        switch (type) {
-            default:
-                mWebView = new WebView(context);
-                break;
-        }
-        initWebSetting(mWebView);
-        return mWebView;
+    public WebView createWebView() {
+        WebView w = instantiateWebView(null, android.R.attr.webViewStyle);
+        initWebSetting(w);
+        return w;
     }
 
     /**

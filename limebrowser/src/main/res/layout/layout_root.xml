@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+
+    <LinearLayout
+        android:id="@+id/root_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_home" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:text="@string/item_app_name" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+    </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/root_animationview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/root_title_layout"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="31534-3d-web.json"
+        app:lottie_loop="true" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/root_animationview"
+        android:paddingTop="10dp" />
+
+</RelativeLayout>

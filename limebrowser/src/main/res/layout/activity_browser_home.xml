@@ -10,19 +10,31 @@
         android:layout_height="match_parent"
         android:background="@color/color_807FFFD4">
 
+        <com.snxun.limebrowser.module.rootview.RootView
+            android:id="@+id/root_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/windowLight">
 
-        <include
-            android:id="@+id/home_root_layout"
-            layout="@layout/root_layout" />
+            <include
+                android:id="@+id/home_root_layout"
+                layout="@layout/layout_root" />
 
+
+        </com.snxun.limebrowser.module.rootview.RootView>
     </FrameLayout>
 
     <include
+        layout="@layout/layout_pagers_manager"
+        android:visibility="gone" />
+
+    <include
         android:id="@+id/home_top_layout"
-        layout="@layout/top_bar_layout"
+        layout="@layout/layout_top_bar"
         android:visibility="gone" />
 
     <include
         android:id="@+id/home_bottom_layout"
         layout="@layout/bottom_toolbar_layout" />
+
 </FrameLayout>
