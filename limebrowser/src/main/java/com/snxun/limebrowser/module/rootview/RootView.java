@@ -23,16 +23,12 @@ import com.snxun.limebrowser.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.customview.widget.ViewDragHelper.INVALID_POINTER;
+
 
 public class RootView extends RelativeLayout {
     private static final String TAG = "RootView";
-    public static final int INVALID_POINTER = -1;
-    private static final int FLING_SPEED = 50;
-    private static final int MSG_FLING = 2222;
-    public final static int NEWS_MODE = 3;
-    public final static int NORMAL_MODE = 4;
-    public final static int FAVORITE_MODE = 5;
-    public final static int SCROLL_HORIZONTALLY = 5;
+    //    public final static int SCROLL_HORIZONTALLY = 5;
     public final static int SCROLL_VERTICALLY = 6;
     public final static int SCROLL_NONE = 0;
     private int mTouchSlop;
@@ -47,8 +43,6 @@ public class RootView extends RelativeLayout {
     private VelocityTracker mVelocityTracker;
     private int mFinalDistanceY;
     private int mFinalDistanceX;
-    private int mCurrentMode = NORMAL_MODE;
-    private int mNextMode = NORMAL_MODE;
     private int mDirection;
     private boolean mScrollHEnable = true;
     private boolean mScrollVEnable = true;
@@ -86,25 +80,9 @@ public class RootView extends RelativeLayout {
         mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(mContext, R.anim.linear_out_show_in);
     }
 
-    public void attachScrollStateListener(ScrollStateListener listener) {
-        mListeners.add(listener);
-    }
-
-    public void removeScrollStateListener(ScrollStateListener listener) {
-        mListeners.remove(listener);
-    }
-
-    public void setFinalDistance(int xDis, int yDis) {
-        if (xDis <= 0) {
-            mScrollHEnable = false;
-        }
-        if (yDis <= 0) {
-            mScrollVEnable = false;
-        }
-        mFinalDistanceX = xDis;
-        mFinalDistanceY = yDis;
-    }
-
+    /**
+     * 回收速度追踪器
+     */
     private void recycleVelocityTracker() {
         if (mVelocityTracker != null) {
             mVelocityTracker.recycle();
@@ -112,6 +90,9 @@ public class RootView extends RelativeLayout {
         }
     }
 
+    /**
+     * 重置触摸状态
+     */
     private void resetTouchState() {
         mIsScrolling = false;
         mDirection = SCROLL_NONE;
@@ -155,52 +136,6 @@ public class RootView extends RelativeLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    private boolean determineScrollingStart(MotionEvent ev, float touchSlopScale) {
-        if (mCurrentMode == NEWS_MODE || mDirection != SCROLL_NONE) {
-            return false;
-        }
-        final float y = ev.getY();
-        final float x = ev.getX();
-        float deltaY = y - mLastMotionY;
-        float deltaX = x - mLastMotionX;
-        final int yDiff = (int) Math.abs(deltaY);
-        final int xDiff = (int) Math.abs(deltaX);
-        final int touchSlop = Math.round(touchSlopScale * mTouchSlop);
-        Log.e(TAG, "determineScrollingStart ::onStartScroll  SCROLL_HORIZONTALLY =:" + mDirection + ",yDiff =:" + yDiff);
-        boolean moved = yDiff > touchSlop;
-        if (moved) {
-            if (mCurrentMode == NORMAL_MODE) {
-                mDirection = SCROLL_VERTICALLY;
-                mIsScrolling = true;
-                onStartScroll();
-                verifyMode(false);
-                mLastMotionX = x;
-                mLastMotionY = y;
-                return true;
-            }
-        }
-        moved = xDiff > touchSlop;
-        Log.e(TAG, "determineScrollingStart :: SCROLL_HORIZONTALLY =:" + mDirection + ",xDiff =:" + xDiff);
-        if (moved) {
-            if (mCurrentMode == NORMAL_MODE) {
-                if (deltaX > 0) {
-                    return false;
-                }
-            }
-            mDirection = SCROLL_HORIZONTALLY;
-            mIsScrolling = true;
-            onStartScroll();
-            verifyMode(false);
-            mLastMotionX = x;
-            mLastMotionY = y;
-            return true;
-        }
-        return false;
-    }
-
-    private boolean determineScrollingStart(MotionEvent ev) {
-        return determineScrollingStart(ev, 1.0f);
-    }
 
     private void initOrResetVelocityTracker() {
         if (mVelocityTracker == null) {
@@ -219,10 +154,8 @@ public class RootView extends RelativeLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (getChildCount() < 0) {
-            Log.e(TAG, "There are no children to scroll");
             return super.onInterceptTouchEvent(ev);
         }
-
         final int action = ev.getAction();
         boolean wasScrolling = mIsScrolling ||
                 (mScrollAnimator != null && mScrollAnimator.isRunning());
@@ -234,7 +167,6 @@ public class RootView extends RelativeLayout {
                 mActivePointerId = ev.getPointerId(0);
                 initOrResetVelocityTracker();
                 mVelocityTracker.addMovement(ev);
-                Log.e(TAG, "onInterceptTouchEvent :: ACTION_DOWN mDirection = :" + mDirection);
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
@@ -242,12 +174,9 @@ public class RootView extends RelativeLayout {
                 mVelocityTracker.addMovement(ev);
                 int activePointerIndex = ev.findPointerIndex(mActivePointerId);
                 if (activePointerIndex < 0) {
-                    Log.d(TAG, "findPointerIndex failed");
                     mActivePointerId = INVALID_POINTER;
                     break;
                 }
-                determineScrollingStart(ev);
-                Log.e(TAG, "onInterceptTouchEvent :: ACTION_MOVE mDirection = :" + mDirection);
                 break;
             }
             case MotionEvent.ACTION_CANCEL:
@@ -256,12 +185,9 @@ public class RootView extends RelativeLayout {
                 if (wasScrolling) {
                     scrollToPositivePosition();
                 }
-                Log.e(TAG, "onInterceptTouchEvent :: ACTION_UP mDirection = :" + mDirection);
-                // Reset the drag state and the velocity tracker
                 break;
             }
         }
-        Log.e(TAG, "onInterceptTouchEvent :: ACTION_UP wasScrolling = :" + wasScrolling);
         return wasScrolling;
     }
 
@@ -290,8 +216,6 @@ public class RootView extends RelativeLayout {
             }
             case MotionEvent.ACTION_MOVE: {
                 if (mActivePointerId == INVALID_POINTER) break;
-                Log.e(TAG, "onTouchEvent :: ACTION_MOVE mIsScrolling =:" +
-                        mIsScrolling + ",attachToFinal =:" + attachToFinal() + ",mDirection =:" + mDirection);
                 mVelocityTracker.addMovement(ev);
                 int activePointerIndex = ev.findPointerIndex(mActivePointerId);
                 int x = (int) ev.getX(activePointerIndex);
@@ -300,27 +224,15 @@ public class RootView extends RelativeLayout {
                 if (mIsScrolling) {
                     float delta = 0f;
                     if (!attachToFinal()) {
-                        switch (mDirection) {
-                            case SCROLL_HORIZONTALLY:
-                                delta = x - mLastMotionX;
-                                mTotalMotionX += delta;
-                                mRate = mTotalMotionX / mFinalDistanceX;
-                                doScroll();
-                                break;
-                            case SCROLL_VERTICALLY:
-                                delta = y - mLastMotionY;
-                                mTotalMotionY += delta;
-                                mRate = mTotalMotionY / mFinalDistanceY;
-                                doScroll();
-                                break;
+                        if (mDirection == SCROLL_VERTICALLY) {
+                            delta = y - mLastMotionY;
+                            mTotalMotionY += delta;
+                            mRate = mTotalMotionY / mFinalDistanceY;
+                            doScroll();
                         }
-                    } else {
-                        // TODO: 2017/12/12
                     }
                     mLastMotionY = y;
                     mLastMotionX = x;
-                } else {
-                    determineScrollingStart(ev);
                 }
                 break;
             }
@@ -340,17 +252,10 @@ public class RootView extends RelativeLayout {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: {
                 mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                switch (mDirection) {
-                    case SCROLL_HORIZONTALLY:
-                        mCurrentVelocity = (int) mVelocityTracker.getXVelocity(mActivePointerId);
-                        break;
-                    case SCROLL_VERTICALLY:
-                        mCurrentVelocity = (int) mVelocityTracker.getYVelocity(mActivePointerId);
-                        break;
+                if (mDirection == SCROLL_VERTICALLY) {
+                    mCurrentVelocity = (int) mVelocityTracker.getYVelocity(mActivePointerId);
                 }
-                verifyMode(true);
                 checkPoint();
-                Log.e(TAG, "onTouchEvent :: ACTION_UP");
                 break;
             }
         }
@@ -363,17 +268,10 @@ public class RootView extends RelativeLayout {
 
     private boolean attachToFinal() {
         if (mDirection == SCROLL_VERTICALLY) {
-            if (mNextMode == NEWS_MODE) {
-                return mRate <= -1.0f;
-            }
-        } else if (mDirection == SCROLL_HORIZONTALLY) {
-            if (mNextMode == FAVORITE_MODE) {
-                return mRate <= -1.0f;
-            }
+            return mRate <= -1.0f;
         } else {
             return true;
         }
-        return mRate >= 0.f;
     }
 
     void stopScroller() {
@@ -414,15 +312,12 @@ public class RootView extends RelativeLayout {
 
     private void scrollToPositivePosition() {
         float curRate = getRate();
-        float positiveRate = getPositiveRate();
-        Log.e(TAG, "scrollToPositivePosition curRate =:" + curRate + ",positiveRate =:" + positiveRate);
+        float positiveRate = 0.0f;
         if (Float.compare(curRate, positiveRate) != 0) {
             animateScroll(curRate, positiveRate, new Runnable() {
                 @Override
                 public void run() {
-                    Log.e(TAG, "checkPoint scrollToPositivePosition curRate finish" + ",mDirection =:" + mDirection);
                     checkPoint();
-                    // endScroll();
                 }
             });
             invalidate();
@@ -431,29 +326,18 @@ public class RootView extends RelativeLayout {
 
     @Override
     public void computeScroll() {
-        Log.e(TAG, "computeScroll :: mIsOverScroll :" + attachToFinal());
         if (attachToFinal()) {
             endScroll();
         }
         if (mScroller.computeScrollOffset()) {
-            Log.e(TAG, "computeScroll :111: mIsOverScroll :" + attachToFinal());
             if (!attachToFinal()) {
                 if (mScroller.isFinished()) {
                     scrollToPositivePosition();
                 } else {
-                    Log.e(TAG, "computeScroll :222 : mIsOverScroll :" + attachToFinal() + ",mDirection =:" + mDirection);
-                    switch (mDirection) {
-                        case SCROLL_HORIZONTALLY:
-                            mTotalMotionX = mScroller.getCurrX();
-                            Log.e(TAG, "computeScroll :333 : mTotalMotionX :" + mTotalMotionX + ",mDirection =:SCROLL_HORIZONTALLY" + ",mScroller.getCurrX() =:" + mScroller.getCurrX());
-                            mRate = mTotalMotionX / mFinalDistanceX;
-                            doScroll();
-                            break;
-                        case SCROLL_VERTICALLY:
-                            mTotalMotionY = mScroller.getCurrY();
-                            mRate = mTotalMotionY / mFinalDistanceY;
-                            doScroll();
-                            break;
+                    if (mDirection == SCROLL_VERTICALLY) {
+                        mTotalMotionY = mScroller.getCurrY();
+                        mRate = mTotalMotionY / mFinalDistanceY;
+                        doScroll();
                     }
                 }
             }
@@ -461,83 +345,14 @@ public class RootView extends RelativeLayout {
         super.computeScroll();
     }
 
-    private void verifyMode(boolean fling) {
-        switch (mDirection) {
-            case SCROLL_VERTICALLY:
-                if (Math.abs(mCurrentVelocity) > mMinimumVelocity && getRate() <= 0) {
-                    if (mCurrentVelocity < 0) {
-                        mNextMode = NEWS_MODE;
-                        Log.e(TAG, "verifyMode :: 111");
-                    } else {
-                        mNextMode = NORMAL_MODE;
-                        Log.e(TAG, "verifyMode :: 112");
-                    }
-                } else {
-                    if (mCurrentMode == NORMAL_MODE) {
-                        mNextMode = NEWS_MODE;
-                        Log.e(TAG, "verifyMode :: 113");
-                    } else {
-                        mNextMode = NORMAL_MODE;
-                        Log.e(TAG, "verifyMode :: 114");
-                    }
-                }
-                break;
-            case SCROLL_HORIZONTALLY:
-                if (Math.abs(mCurrentVelocity) > mMinimumVelocity) {
-                    if (mCurrentVelocity < 0) {
-                        mNextMode = FAVORITE_MODE;
-                    } else {
-                        mNextMode = NORMAL_MODE;
-                    }
-                } else {
-                    if (mCurrentMode == NORMAL_MODE) {
-                        if (fling) {
-                            if (Math.abs(mTotalMotionX) > mFinalDistanceX * 0.4f) {
-                                mNextMode = FAVORITE_MODE;
-                            } else {
-                                mNextMode = NORMAL_MODE;
-                            }
-                        } else {
-                            mNextMode = FAVORITE_MODE;
-                        }
-                    } else {
-                        if (fling) {
-                            if (Math.abs(mTotalMotionX) > mFinalDistanceX * 0.8f) {
-                                mNextMode = FAVORITE_MODE;
-                            } else {
-                                mNextMode = NORMAL_MODE;
-                            }
-                        } else {
-                            Log.e(TAG, "verifyMode :: mRate =:" + mRate);
-                            mNextMode = NORMAL_MODE;
-                        }
-                    }
-                }
-                break;
-            case SCROLL_NONE:
-                break;
-        }
-        Log.e(TAG, "verifyMode :: mCurrentMode =:" + mCurrentMode +
-                ",mNextMode =:" + mNextMode + ",mCurrentVelocity =:" + mCurrentVelocity +
-                ",mDirection =:" + mDirection + ",fling =:" + fling);
-    }
-
     private void endScroll() {
-        Log.e(TAG, "endScroll attachToFinal() =:" + attachToFinal() + ",mNextMode =:" + mNextMode + ",mRate =:" + mRate);
-        if (mNextMode != NORMAL_MODE) {
-            setRate(-1.0f);
-        } else {
-            setRate(0.0f);
-        }
-        mCurrentMode = mNextMode;
+        setRate(0.0f);
         onEndScroll();
         resetTouchState();
         stopScroller();
     }
 
     private void checkPoint() {
-        Log.e(TAG, "checkPoint :: attachToFinal :: =:" + attachToFinal() + "." +
-                "mode =" + mCurrentMode + ",nextMode =:" + mNextMode + ",rate =:" + getRate() + ",mIsScrolling =:" + mIsScrolling);
         if (!mIsScrolling) {
             return;
         }
@@ -549,79 +364,20 @@ public class RootView extends RelativeLayout {
         }
     }
 
-    public void back2Normal() {
-        Log.e(TAG, "back2Normal :: mCurrentMode =:" + mCurrentMode + ",mIsScrolling + ;" + mIsScrolling);
-        if (mIsScrolling) {
-            return;
-        }
-        mIsScrolling = true;
-        mDirection = SCROLL_VERTICALLY;
-
-        if (mCurrentMode == NORMAL_MODE) {
-            mNextMode = NEWS_MODE;
-        } else {
-            mNextMode = NORMAL_MODE;
-        }
-        checkPoint();
-    }
-
-    public void back2Home() {
-        if (mIsScrolling) {
-            return;
-        }
-        mIsScrolling = true;
-        mDirection = SCROLL_HORIZONTALLY;
-        Log.e(TAG, "back2Home :: mCurrentMode =:" + mCurrentMode);
-        if (mCurrentMode == NORMAL_MODE) {
-            mNextMode = FAVORITE_MODE;
-        } else {
-            mNextMode = NORMAL_MODE;
-        }
-        checkPoint();
-    }
-
-    public int getMode() {
-        return mCurrentMode;
-    }
 
     public void setRate(float rate) {
         if (!mStartedScroll) {
             return;
         }
-        switch (mDirection) {
-            case SCROLL_HORIZONTALLY:
-                mTotalMotionX = mFinalDistanceX * rate;
-                break;
-            case SCROLL_VERTICALLY:
-                mTotalMotionY = mFinalDistanceY * rate;
-                break;
+        if (mDirection == SCROLL_VERTICALLY) {
+            mTotalMotionY = mFinalDistanceY * rate;
         }
-        Log.e(TAG, "setRate :: mRate =:" + mRate + ",mTotalMotionX =:"
-                + mTotalMotionX + ",mTotalMotionY =:" + mTotalMotionY + ",mDirection =:" + mDirection);
         mRate = rate;
         doScroll();
     }
 
     public float getRate() {
         return mRate;
-    }
-
-    public float getPositiveRate() {
-        float positiveRate = 0.0f;
-        switch (mNextMode) {
-            case NEWS_MODE:
-                positiveRate = -1.0f;
-                break;
-            case FAVORITE_MODE:
-                positiveRate = -1.0f;
-                break;
-            case NORMAL_MODE:
-                positiveRate = 0.0f;
-                break;
-            default:
-                break;
-        }
-        return positiveRate;
     }
 
 

@@ -6,5 +6,5 @@
     android:layout_height="wrap_content"
     android:id="@+id/card"
     card:cardUseCompatPadding="true"
-    card:cardElevation="2dp"
-    card:cardCornerRadius="3dp" />
+    card:cardElevation="@dimen/dimen_2dp"
+    card:cardCornerRadius="@dimen/dimen_4dp" />

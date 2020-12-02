@@ -52,6 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/root_animationview"
-        android:paddingTop="10dp" />
+        android:paddingTop="10dp"
+        android:paddingBottom="@dimen/dimen_48dp" />
+
 
 </RelativeLayout>

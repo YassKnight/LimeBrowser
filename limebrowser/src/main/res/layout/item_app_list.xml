@@ -4,15 +4,15 @@
     android:id="@+id/item_app_btn"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="5dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="5dp"
-    android:paddingBottom="8dp">
+    android:paddingStart="@dimen/dimen_4dp"
+    android:paddingTop="@dimen/dimen_8dp"
+    android:paddingEnd="@dimen/dimen_4dp"
+    android:paddingBottom="@dimen/dimen_8dp">
 
     <ImageView
         android:id="@+id/item_app_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/dimen_48dp"
+        android:layout_height="@dimen/dimen_48dp"
         android:layout_centerHorizontal="true" />
 
     <TextView

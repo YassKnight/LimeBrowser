@@ -25,7 +25,7 @@
             android:layout_width="@dimen/dimen_44dp"
             android:layout_height="@dimen/dimen_44dp"
             android:layout_centerVertical="true"
-            android:padding="12dp"
+            android:padding="@dimen/dimen_12dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_home" />
 
@@ -36,7 +36,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/ivWebsiteIcon"
             android:text="LimeBrowser"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/ivPageClose"
@@ -44,7 +44,7 @@
             android:layout_height="@dimen/dimen_44dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="14dp"
+            android:padding="@dimen/dimen_12dp"
             android:src="@drawable/ic_close" />
     </RelativeLayout>
 </com.snxun.limebrowser.module.stackview.widget.LimeTabCard>

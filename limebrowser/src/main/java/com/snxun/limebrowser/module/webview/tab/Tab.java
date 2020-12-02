@@ -21,7 +21,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-
 import com.snxun.limebrowser.R;
 import com.snxun.limebrowser.controller.TabController;
 import com.snxun.limebrowser.controller.WebViewController;
@@ -32,7 +31,6 @@ import com.snxun.limebrowser.util.ViewUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-
 
 
 public class Tab {
@@ -94,10 +92,12 @@ public class Tab {
     private boolean mInForeground;
     private static Paint sAlphaPaint = new Paint();
     private Stack<String> mBrowsedHistory = new Stack<>();
+
     static {
         sAlphaPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         sAlphaPaint.setColor(Color.TRANSPARENT);
     }
+
     // 获取默认网页图标
     private static synchronized Bitmap getDefaultFavicon(Context context) {
         if (sDefaultFavicon == null) {
@@ -108,23 +108,23 @@ public class Tab {
     }
 
     // 构造WebViewClient
-    private final WebViewClient mWebViewClient = new LimeWebViewClient(){
+    private final WebViewClient mWebViewClient = new LimeWebViewClient() {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             mInPageLoad = true;
             mUpdateThumbnail = true;
             mPageLoadProgress = INITIAL_PROGRESS;
-            mCurrentState = new PageState(mContext,url,favicon);
+            mCurrentState = new PageState(mContext, url, favicon);
             mLoadStartTime = SystemClock.uptimeMillis();
-            mWebViewController.onPageStarted(Tab.this,view,favicon);
+            mWebViewController.onPageStarted(Tab.this, view, favicon);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            syncCurrentState(view,url);
-            if(url != null && url.equals(mSavePageUrl)){
+            syncCurrentState(view, url);
+            if (url != null && url.equals(mSavePageUrl)) {
                 mCurrentState.mTitle = mSavePageTitle;
                 mCurrentState.mUrl = mSavePageUrl;
             }
@@ -133,7 +133,7 @@ public class Tab {
     };
 
     // 构造 WebChromeClient
-    private WebChromeClient mWebChromeClient = new LimeWebChromeClient(){
+    private WebChromeClient mWebChromeClient = new LimeWebChromeClient() {
         @Override
         public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
             return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
@@ -167,16 +167,20 @@ public class Tab {
 //            mWebViewController.onFavicon(Tab.this, view, icon);
         }
     };
-    public void loadBlank(){
-        loadUrl(DEFAULT_BLANK_URL,null,false);
+
+    public void loadBlank() {
+        loadUrl(DEFAULT_BLANK_URL, null, false);
     }
-    public Tab(WebViewController webViewController, WebView view){
-        this(webViewController,view,null);
+
+    public Tab(WebViewController webViewController, WebView view) {
+        this(webViewController, view, null);
     }
-    public Tab(WebViewController webViewController, Bundle state){
-        this(webViewController,null,state);
+
+    public Tab(WebViewController webViewController, Bundle state) {
+        this(webViewController, null, state);
     }
-    public Tab(WebViewController webViewController, WebView view, Bundle state){
+
+    public Tab(WebViewController webViewController, WebView view, Bundle state) {
         mSavePageJob = new HashMap<Integer, Long>();
         mWebViewController = webViewController;
         mContext = mWebViewController.getContext();
@@ -190,10 +194,10 @@ public class Tab {
             mId = TabController.getNextId();
         }
         setWebView(view);
-        mHandler = new Handler(){
+        mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                switch (msg.what){
+                switch (msg.what) {
                     case MSG_CAPTURE:
                         capture();
                         break;
@@ -203,19 +207,20 @@ public class Tab {
         mBrowsedHistory.push(DEFAULT_BLANK_URL);
     }
 
-    private void restoreState(Bundle state){
+    private void restoreState(Bundle state) {
         mSavedState = state;
-        if(mSavedState == null){
+        if (mSavedState == null) {
             return;
         }
         mId = state.getLong(ID);
         String url = state.getString(CURRENT_URL);
         String title = state.getString(CURRENT_TITLE);
-        mCurrentState = new PageState(mContext,url,title);
+        mCurrentState = new PageState(mContext, url, title);
     }
+
     public void shouldUpdateThumbnail(boolean should) {
         mUpdateThumbnail = should;
-        if(should) capture();
+        if (should) capture();
     }
 
     /**
@@ -226,6 +231,7 @@ public class Tab {
     public void refreshIdAfterPreload() {
         mId = TabController.getNextId();
     }
+
     public void updateShouldCaptureThumbnails() {
         synchronized (Tab.this) {
             if (mCapture == null) {
@@ -240,9 +246,11 @@ public class Tab {
         mWebViewController = ctl;
         updateShouldCaptureThumbnails();
     }
+
     public long getId() {
         return mId;
     }
+
     public void setWebView(WebView w) {
         setWebView(w, true);
     }
@@ -272,18 +280,11 @@ public class Tab {
             mMainView.setWebViewClient(mWebViewClient);
             mMainView.setWebChromeClient(mWebChromeClient);
             TabController tc = mWebViewController.getTabController();
-            /*
-            if (tc != null && tc.getOnThumbnailUpdatedListener() != null) {
-                mMainView.setPictureListener(this);
-            }
-            */
             if (restore && (mSavedState != null)) {
-                // restoreUserAgent();
                 WebBackForwardList restoredState
                         = mMainView.restoreState(mSavedState);
                 if (restoredState == null || restoredState.getSize() == 0) {
-                    Log.w(TAG, "Failed to restore WebView state!");
-                    loadUrl(mCurrentState.mOriginalUrl, null,true);
+                    loadUrl(mCurrentState.mOriginalUrl, null, true);
                 }
                 mSavedState = null;
             }
@@ -301,16 +302,12 @@ public class Tab {
             setWebView(null);
             webView.destroy();
         }
-        /// M: add for save page @ {
         if (mSavePageJob == null) {
             return;
         }
         if (mSavePageJob.size() != 0) {
-            // new CancelSavePageTask().execute();
         }
-        /// @ }
     }
-    /// @ }
 
     /**
      * Dismiss the subWindow for the tab.
@@ -332,6 +329,7 @@ public class Tab {
             }
         }
     }
+
     void pause() {
         if (mMainView != null) {
             mMainView.onPause();
@@ -340,6 +338,7 @@ public class Tab {
             }
         }
     }
+
     public void putInForeground() {
         if (mInForeground) {
             return;
@@ -347,8 +346,9 @@ public class Tab {
         mInForeground = true;
         resume();
     }
+
     public void putInBackground() {
-        Log.e(TAG,"putInBackground ------- mInForeground =:" + mInForeground);
+        Log.e(TAG, "putInBackground ------- mInForeground =:" + mInForeground);
         if (!mInForeground) {
             return;
         }
@@ -369,6 +369,7 @@ public class Tab {
      * Return the main window of this tab. Note: if a tab is freed in the
      * background, this can return null. It is only guaranteed to be
      * non-null for the current tab.
+     *
      * @return The main WebView of this tab.
      */
     public WebView getWebView() {
@@ -378,33 +379,35 @@ public class Tab {
     void setViewContainer(View container) {
         mContainer = container;
     }
+
     public String getUrl() {
         return mCurrentState.mUrl;
     }
 
-    public boolean checkUrlNotNull(){
+    public boolean checkUrlNotNull() {
         return mCurrentState.checkUrlNotNull();
     }
-    public String getCurrentUrl(){
-        for(int i = 0 ;i < mBrowsedHistory.size();i++){
-            Log.e(TAG,"getCurrentUrl :: 第 " + i +"项  :" + mBrowsedHistory.elementAt(i));
-        }
+
+    public String getCurrentUrl() {
         return mBrowsedHistory.peek();
     }
-    public String getPreUrl(){
+
+    public String getPreUrl() {
         int size = mBrowsedHistory.size();
         int pre = size - 2;
-        if(pre >= 0){
+        if (pre >= 0) {
             return mBrowsedHistory.elementAt(pre);
         }
         return DEFAULT_BLANK_URL;
     }
+
     public String getOriginalUrl() {
         if (mCurrentState.mOriginalUrl == null) {
             return getUrl();
         }
         return mCurrentState.mOriginalUrl;
     }
+
     /**
      * Get the title of this tab.
      */
@@ -414,6 +417,7 @@ public class Tab {
         }
         return mCurrentState.mTitle;
     }
+
     /**
      * Get the favicon of this tab.
      */
@@ -424,27 +428,34 @@ public class Tab {
         return getDefaultFavicon(mContext);
     }
 
-    public int getPageLoadProgress(){
+    public int getPageLoadProgress() {
         return mPageLoadProgress;
     }
-    public boolean isBlank(){
+
+    public boolean isBlank() {
         return mBrowsedHistory.peek().equals(DEFAULT_BLANK_URL);
     }
-    public void insertBlank(){
+
+    public void insertBlank() {
         mBrowsedHistory.push(DEFAULT_BLANK_URL);
-        for(int i = 0 ;i < mBrowsedHistory.size();i++){
-            Log.e(TAG,"insertBlank :: 第 " + i +"项  :" + mBrowsedHistory.elementAt(i));
+        for (int i = 0; i < mBrowsedHistory.size(); i++) {
+            Log.e(TAG, "insertBlank :: 第 " + i + "项  :" + mBrowsedHistory.elementAt(i));
         }
     }
-    public void clearWebHistory(){
+
+    public void clearWebHistory() {
         mMainView.clearHistory();
         mMainView.clearCache(true);
+        popBrowsedHistory();
         mMainView.loadUrl(DEFAULT_BLANK_URL);
     }
-    public void popBrowsedHistory(){
+
+    public void popBrowsedHistory() {
         mBrowsedHistory.pop();
     }
-    public void clearTabData(){
+
+
+    public void clearTabData() {
         mUpdateThumbnail = false;
         mCurrentState.mUrl = DEFAULT_BLANK_URL;
         mCurrentState.mOriginalUrl = DEFAULT_BLANK_URL;
@@ -453,13 +464,15 @@ public class Tab {
         mBrowsedHistory.clear();
         insertBlank();
     }
+
     /**
      * @return TRUE if onPageStarted is called while onPageFinished is not
-     *         called yet.
+     * called yet.
      */
     boolean inPageLoad() {
         return mInPageLoad;
     }
+
     /**
      * @return The Bundle with the tab's state if it can be saved, otherwise null
      */
@@ -486,6 +499,7 @@ public class Tab {
         mSavedState.putString(CURRENT_TITLE, mCurrentState.mTitle);
         return mSavedState;
     }
+
     public Bitmap getScreenshot() {
         synchronized (Tab.this) {
             return mCapture;
@@ -501,39 +515,39 @@ public class Tab {
             web.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
     }
-    public void stopLoading(){
-        if(mMainView != null && inPageLoad()){
+
+    public void stopLoading() {
+        if (mMainView != null && inPageLoad()) {
             mMainView.stopLoading();
         }
     }
 
-    public void reloadPage(){
+    public void reloadPage() {
         mMainView.reload();
     }
-    private void syncCurrentState(WebView view, String url){
-        if(mWillBeClosed){
+
+    private void syncCurrentState(WebView view, String url) {
+        if (mWillBeClosed) {
             return;
         }
         mCurrentState.mUrl = view.getUrl();
-        if(mCurrentState.mUrl == null){
+        if (mCurrentState.mUrl == null) {
             mCurrentState.mUrl = mContext.getString(R.string.defaultWebTitle);
         }
         mCurrentState.mOriginalUrl = view.getOriginalUrl();
         mCurrentState.mTitle = view.getTitle();
         mCurrentState.mFavicon = view.getFavicon();
     }
+
     public void loadUrl(String url, Map<String, String> headers, boolean record) {
         if (mMainView != null) {
             mPageLoadProgress = INITIAL_PROGRESS;
             mInPageLoad = true;
             mWebViewController.onPageStarted(this, mMainView, null);
-            try{
+            try {
                 mMainView.loadUrl(url, headers);
-                if(record) mBrowsedHistory.push(url);
-                for(int i = 0 ;i < mBrowsedHistory.size();i++){
-                    Log.e(TAG,"loadUrl :: 第 " + i +"项  :" + mBrowsedHistory.elementAt(i) + " ,size =:" +  mBrowsedHistory.size());
-                }
-            }catch(SecurityException e){
+                if (record) mBrowsedHistory.push(url);
+            } catch (SecurityException e) {
                 e.printStackTrace();
             }
         }
@@ -542,11 +556,11 @@ public class Tab {
     public void capture() {
         if (mMainView == null || mCapture == null) return;
         View view = !isBlank() ? mMainView : mWebViewController.getActivity().getWindow().getDecorView();
-        mCapture = Bitmap.createScaledBitmap(mCapture,mCaptureWidth,mCaptureHeight,true);
+        mCapture = Bitmap.createScaledBitmap(mCapture, mCaptureWidth, mCaptureHeight, true);
         Canvas c = new Canvas(mCapture);
         int state = c.save();
-        if(!isBlank()){
-            c.translate(0,mContext.getResources().getDimensionPixelSize(R.dimen.dimen_48dp));
+        if (!isBlank()) {
+            c.translate(0, mContext.getResources().getDimensionPixelSize(R.dimen.dimen_48dp));
         }
         view.draw(c);
         c.restoreToCount(state);
@@ -563,27 +577,31 @@ public class Tab {
     }
 
     public boolean canGoBack() {
-        for(int i = 0 ;i < mBrowsedHistory.size();i++){
-            Log.e(TAG,"canGoBack :: 第 " + i +"项  :" + mBrowsedHistory.elementAt(i) + " ,size =:" +  mBrowsedHistory.size());
-        }
         boolean isBlank = DEFAULT_BLANK_URL.equals(mBrowsedHistory.peek());
         boolean isSingle = mBrowsedHistory.size() == 1;
-        Log.e(TAG,"canGoBack :: isSingle =:" + isSingle +",isBlank =:" + isBlank);
         return mMainView != null ? !(isSingle && isBlank) : false;
-
     }
+
     public boolean canGoForward() {
         return mMainView != null ? mMainView.canGoForward() : false;
     }
 
     public void goBack() {
-        Log.e(TAG,"goBack :: mMainView =:" + mMainView);
         if (mMainView != null) {
-            mBrowsedHistory.pop();
-            mMainView.loadUrl(mBrowsedHistory.peek());
-            for(int i = 0 ;i < mBrowsedHistory.size();i++){
-                Log.e(TAG,"goBack :: 第 " + i +"项  :" + mBrowsedHistory.elementAt(i) + " ,size =:" +  mBrowsedHistory.size());
-            }
+            mMainView.loadUrl(mBrowsedHistory.pop());
+        }
+    }
+
+    public boolean webCanGoBack() {
+        if (mMainView != null && mBrowsedHistory.size() != 1) {
+            return mMainView.canGoBack();
+        }
+        return false;
+    }
+
+    public void webGoBack() {
+        if (mMainView != null) {
+            mMainView.goBack();
         }
     }
 
@@ -593,26 +611,31 @@ public class Tab {
         }
     }
 
-    public static class PageState{
+    public static class PageState {
         String mUrl;
         String mOriginalUrl;
         String mTitle;
         Bitmap mFavicon;
-        PageState(Context context){
-            this(context,"",getDefaultFavicon(context));
+
+        PageState(Context context) {
+            this(context, "", getDefaultFavicon(context));
         }
-        PageState(Context context, String url, Bitmap favicon){
-            this(url,context.getString(R.string.defaultWebTitle),favicon);
+
+        PageState(Context context, String url, Bitmap favicon) {
+            this(url, context.getString(R.string.defaultWebTitle), favicon);
         }
-        PageState(Context context, String url, String title){
-            this(url,title,getDefaultFavicon(context));
+
+        PageState(Context context, String url, String title) {
+            this(url, title, getDefaultFavicon(context));
         }
-        PageState(String url, String title, Bitmap favicon){
+
+        PageState(String url, String title, Bitmap favicon) {
             mUrl = mOriginalUrl = url;
             mTitle = title;
             mFavicon = favicon;
         }
-        boolean checkUrlNotNull(){
+
+        boolean checkUrlNotNull() {
             return !TextUtils.isEmpty(mUrl);
         }
     }

@@ -15,18 +15,19 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lodz.android.corekt.utils.ToastUtils;
 import com.lodz.android.pandora.base.activity.AbsActivity;
 import com.snxun.limebrowser.R;
 import com.snxun.limebrowser.bean.WebApplicationBean;
 import com.snxun.limebrowser.controller.TabController;
 import com.snxun.limebrowser.controller.UiController;
 import com.snxun.limebrowser.module.bottomview.LimeBottomView;
+import com.snxun.limebrowser.module.dialog.ExitDialog;
 import com.snxun.limebrowser.module.recyclerview.AppRecyclerViewAdapter;
 import com.snxun.limebrowser.module.rootview.RootView;
 import com.snxun.limebrowser.module.stackview.widget.LimeStackView;
@@ -52,6 +53,20 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
      * 浏览器首页应用数据的key
      */
     private static final String WEB_APP_DATA = "WEB_APP_DATA";
+
+    /**
+     * 启动activity
+     *
+     * @param context 上下文
+     * @param list    应用列表数据
+     */
+    public static void start(Context context, ArrayList<WebApplicationBean> list) {
+        Intent intent = new Intent();
+        intent.setClass(context, LimeBrowserActivity.class);
+        intent.putParcelableArrayListExtra(WEB_APP_DATA, list);
+        context.startActivity(intent);
+    }
+
     /**
      * 浏览器首页应用数据集
      */
@@ -101,6 +116,10 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
      */
     private TextView mBackToMainBtn;
     /**
+     * 控件：清空多窗口按钮
+     */
+    private TextView mClearTabBtn;
+    /**
      * 控件：打开多窗口管理界面的按钮
      */
     private FrameLayout mOpenMultiBtn;
@@ -112,19 +131,39 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
      * 布局：底部菜单栏
      */
     private LimeBottomView mBottomLayout;
+    /**
+     * 控件：底部退出按钮
+     */
+    private ImageView mBottomExitBtn;
+    /**
+     * 控件：底部主界面按钮
+     */
+    private ImageView mBottomHomeBtn;
+    /**
+     * 控件：底部返回按钮
+     */
+    private ImageView mBottomBackBtn;
+    /**
+     * 控件：底部前进按钮
+     */
+    private ImageView mBottomforwardBtn;
 
-    public static void start(Context context, ArrayList<WebApplicationBean> list) {
-        Intent intent = new Intent();
-        intent.setClass(context, LimeBrowserActivity.class);
-        intent.putParcelableArrayListExtra(WEB_APP_DATA, list);
-        context.startActivity(intent);
-    }
 
     /**
      * 展示应用列表的rv相关
      */
     private RecyclerView mRecyclerView;
     private AppRecyclerViewAdapter mRecyclerViewAdapter;
+
+    /**
+     * 退出间隔
+     */
+    private static final int EXIT_INTERVAL = 2000;
+
+    /**
+     * 退出时间
+     */
+    private long mExitTime = 0;
 
     @Override
     protected int getAbsLayoutId() {
@@ -141,15 +180,13 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
         mTabAdapter = new TabAdapter(this, this);
         mStackView.setAdapter(mTabAdapter);
         mFactory = new WebViewFactory(this);
-        // 先建立一个tab标记主页
-        if (mTabController.getTabCount() <= 0) {
-            addTab(false);
-        }
     }
+
 
     @Override
     protected void setListeners() {
         super.setListeners();
+        //移除窗口监听
         mStackView.setOnChildDismissedListener(this);
         //app点击事件，切换至webview
         mRecyclerViewAdapter.setItemListener(new AppRecyclerViewAdapter.ItemClickListener() {
@@ -179,6 +216,29 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
                 showTabs();
             }
         });
+        //打开主页
+        mBottomHomeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchToMain();
+            }
+        });
+        //退出浏览器
+        mBottomExitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ExitDialog(getContext()).show();
+            }
+        });
+        //清空所有窗口
+        mClearTabBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTabController.destroy();
+                addTab(true);
+                ToastUtils.showShort(getContext(), "清空多窗口");
+            }
+        });
     }
 
     @Override
@@ -189,6 +249,15 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
             mRecyclerViewAdapter.setData(mList);
         }
 
+    }
+
+    @Override
+    protected void endCreate() {
+        super.endCreate();
+        // 先建立一个tab标记主页
+        if (mTabController.getTabCount() <= 0) {
+            addTab(false);
+        }
     }
 
     /**
@@ -204,7 +273,12 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
         mBackToMainBtn = findViewById(R.id.tvBack);
         mOpenMultiBtn = findViewById(R.id.bottom_multi_layout);
         mMultiNumTv = findViewById(R.id.bottom_multi_tv);
-        mBottomLayout=findViewById(R.id.home_bottom_layout);
+        mBottomLayout = findViewById(R.id.home_bottom_layout);
+        mBottomHomeBtn = findViewById(R.id.bottom_home_img);
+        mBottomExitBtn = findViewById(R.id.bottom_exit_img);
+        mBottomBackBtn = findViewById(R.id.bottom_back_img);
+        mBottomforwardBtn = findViewById(R.id.bottom_forward_img);
+        mClearTabBtn = findViewById(R.id.tvClear);
 
     }
 
@@ -243,7 +317,6 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
                 public void run() {
                     hideTabs(false); // 把页面管理页隐藏
                     mBottomLayout.bringToFront();
-                    //            initWindow();
                 }
             });
         }
@@ -283,7 +356,7 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
                         FrameLayout.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
             }
-//            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.dimen_48dp);
+            lp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dimen_48dp);
             mContentWrapper.addView(view, lp);
         }
         mIsInMain = false;
@@ -303,7 +376,6 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
                 @Override
                 public void run() {
                     mTabsManagerLayout.setVisibility(View.GONE);
-//                    initWindow();
                 }
             });
             View selectedChild = mStackView.getSelectedChild();
@@ -313,8 +385,6 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
             }
             animateShowFromAlpha(mTabsManagerLayout.findViewById(R.id.bottomBar),
                     false, animated, 350, 40, null);
-        } else {
-//            initWindow();
         }
         mContentWrapper.setVisibility(View.VISIBLE);
         mTabsManagerUIShown = false;
@@ -515,11 +585,9 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
         mStackView.selectTab(index, new Runnable() {
             @Override
             public void run() {
-                Log.e(TAG, "onSelect ----- mActiveTab.checkUrlNotNull() =:" + mActiveTab.checkUrlNotNull() + "mActiveTab " + mActiveTab.getTitle() + "," + mActiveTab.getUrl());
                 mContentWrapper.setVisibility(View.VISIBLE);
                 mTabsManagerLayout.setVisibility(View.GONE);
                 mTabsManagerUIShown = false;
-//                initWindow();
             }
         });
         View selectedChild = mStackView.getSelectedChild();
@@ -529,7 +597,6 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
         }
         animateShowFromAlpha(mTabsManagerLayout.findViewById(R.id.bottomBar),
                 false, true, 300, 40, null);
-        Log.e(TAG, "onSelect :: key =:" + tab.getId());
     }
 
     @Override
@@ -546,5 +613,30 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
     @Override
     public void onTabDataChanged(Tab tab) {
         mTabAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 重写back键逻辑
+     *
+     * @return
+     */
+    @Override
+    protected boolean onPressBack() {
+        if (isAnimating()) {
+            return true;
+        }
+        if (mTabsManagerUIShown) {
+            hideTabs(true);
+            return true;
+        }
+        if (mActiveTab != null) {
+            if (mActiveTab.webCanGoBack()) {
+                mActiveTab.webGoBack();
+                return true;
+            }
+        }
+        switchToMain();
+        mActiveTab.clearTabData();
+        return true;
     }
 }

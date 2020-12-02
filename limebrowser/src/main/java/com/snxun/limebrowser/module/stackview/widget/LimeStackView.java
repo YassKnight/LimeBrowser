@@ -175,7 +175,6 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
         float transY;
         View child;
         mChildTouchRect = new Rect[childCount];// 子view的触控范围
-        // Logger.e(TAG,"layoutChildren :: layoutChildren :: mLayoutState =:" + mLayoutState);
         for (int i = 0; i < childCount; i++) {
             child = getChildAt(i);
             Rect rect = new Rect();

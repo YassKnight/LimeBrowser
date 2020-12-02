@@ -29,12 +29,7 @@
         android:visibility="gone" />
 
     <include
-        android:id="@+id/home_top_layout"
-        layout="@layout/layout_top_bar"
-        android:visibility="gone" />
-
-    <include
         android:id="@+id/home_bottom_layout"
-        layout="@layout/bottom_toolbar_layout" />
+        layout="@layout/layout_bottom_toolbar" />
 
 </FrameLayout>
