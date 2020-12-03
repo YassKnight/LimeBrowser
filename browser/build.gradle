@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
 }
 
 android {
@@ -7,7 +7,6 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.snxun.limebrowser"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -29,9 +28,17 @@ android {
 
 dependencies {
 
-    //引入青柠浏览器库
-    implementation project(':browser')
-
     //组件库
-    implementation 'com.lodz:pandora:1.5.0'
+    api 'com.lodz:pandora:1.5.0'
+
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    //动画框架
+    implementation 'com.airbnb.android:lottie:3.5.0'
+
+    //图片加载库
+    implementation 'com.lodz:imageloader-kt:1.1.5'
+
+    //加载动画
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 }

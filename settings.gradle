@@ -1,3 +1,3 @@
-include ':limebrowser'
+include ':browser'
 include ':app'
 rootProject.name = "LimeBrowser"
