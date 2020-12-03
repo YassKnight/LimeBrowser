@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">LimeBrowser</string>
-    <string name="btn_text" tools:ignore="ExtraTranslation">Open LimeBrowser</string>
+    <string name="app_name">青柠浏览器</string>
+    <string name="btn_text" tools:ignore="ExtraTranslation">打开青柠浏览器</string>
 
 </resources>

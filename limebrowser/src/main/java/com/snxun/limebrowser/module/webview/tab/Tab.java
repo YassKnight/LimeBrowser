@@ -447,7 +447,7 @@ public class Tab {
         mMainView.clearHistory();
         mMainView.clearCache(true);
         popBrowsedHistory();
-        mMainView.loadUrl(DEFAULT_BLANK_URL);
+//        mMainView.loadUrl(DEFAULT_BLANK_URL);
     }
 
     public void popBrowsedHistory() {
@@ -593,7 +593,7 @@ public class Tab {
     }
 
     public boolean webCanGoBack() {
-        if (mMainView != null && mBrowsedHistory.size() != 1) {
+        if (mMainView != null) {
             return mMainView.canGoBack();
         }
         return false;

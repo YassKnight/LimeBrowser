@@ -15,11 +15,13 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.lodz.android.corekt.utils.ToastUtils;
 import com.lodz.android.pandora.base.activity.AbsActivity;
 import com.snxun.limebrowser.R;
@@ -147,6 +149,14 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
      * 控件：底部前进按钮
      */
     private ImageView mBottomforwardBtn;
+    /**
+     * 控件：加载动画
+     */
+    private SpinKitView mSpinKitView;
+    /**
+     * 布局：加载动画布局
+     */
+    private RelativeLayout mLoadingLayout;
 
 
     /**
@@ -221,6 +231,8 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
             @Override
             public void onClick(View v) {
                 switchToMain();
+                mActiveTab.clearTabData();
+                mTabController.recreateWebView(mActiveTab);
             }
         });
         //退出浏览器
@@ -279,6 +291,7 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
         mBottomBackBtn = findViewById(R.id.bottom_back_img);
         mBottomforwardBtn = findViewById(R.id.bottom_forward_img);
         mClearTabBtn = findViewById(R.id.tvClear);
+        mLoadingLayout = findViewById(R.id.loading_layout);
 
     }
 
@@ -546,6 +559,8 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
 
     @Override
     public void onPageStarted(Tab tab, WebView webView, Bitmap favicon) {
+        mLoadingLayout.setVisibility(View.VISIBLE);
+        mLoadingLayout.bringToFront();
 
     }
 
@@ -553,6 +568,7 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
     public void onPageFinished(Tab tab) {
         tab.shouldUpdateThumbnail(true);
         mTabAdapter.notifyDataSetChanged();
+        mLoadingLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -636,7 +652,11 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
             }
         }
         switchToMain();
+        //清空数据，并销毁webview重新创建，避免Tab数据错乱
         mActiveTab.clearTabData();
+        mTabController.recreateWebView(mActiveTab);
+        //避免返回主界面，webview没有加载完成导致加载视图没有关闭
+        mLoadingLayout.setVisibility(View.GONE);
         return true;
     }
 }

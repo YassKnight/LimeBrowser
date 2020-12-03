@@ -21,13 +21,13 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="12dp"
-                android:src="@drawable/ic_home" />
+                android:src="@drawable/browser_icon" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
-                android:padding="12dp"
+                android:padding="@dimen/dimen_8dp"
                 android:text="@string/item_app_name" />
         </LinearLayout>
 
