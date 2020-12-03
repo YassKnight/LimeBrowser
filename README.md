@@ -13,7 +13,8 @@
 ## 应用列表
    + 需要在应用内嵌入浏览器使用可以使用activity跳转：调用LimeBrowserActivity.start(context,Arraylist<WebApplicationBean>);
    + 其中Arraylist<WebApplicationBean>是主界面展示应用的列表数据
-(```)
+   
+    ```java
     public class WebApplicationBean implements Parcelable {
         /**
          * webview应用需要加载的url
@@ -29,4 +30,4 @@
         public String appName;
         ...
         }
-(```)
+    ```
