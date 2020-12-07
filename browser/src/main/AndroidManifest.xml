@@ -4,15 +4,16 @@
     package="com.snxun.browser">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:usesCleartextTraffic="true"
+    <application
+        android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name="com.snxun.browser.ui.LimeBrowserActivity"
+        <activity
+            android:name="com.snxun.browser.ui.LimeBrowserActivity"
+            android:theme="@style/AppTheme.StartingWindowTheme"
             android:process=":browser">
-            <intent-filter>
-                <category android:name="android.intent.category.TAB" />
-            </intent-filter>
+
         </activity>
     </application>
 </manifest>

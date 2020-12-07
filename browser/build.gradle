@@ -1,7 +1,14 @@
-plugins {
-    id 'com.android.library'
-}
-
+apply plugin: 'com.android.library'
+//apply plugin: 'com.novoda.bintray-release'
+//
+//publish {
+//    userOrg = 'yknight9517'//bintray.com用户名
+//    groupId = 'com.snxun'//jcenter上的路径
+//    artifactId = 'browser'//项目名称
+//    publishVersion = '1.0.0'//版本号
+//    desc = 'this is for test'//描述，不重要
+//    website = 'https://github.com/YassKnight/LimeBrowser'//网站，最好有，不重要
+//}
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -10,7 +17,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
     }
 
@@ -33,6 +40,7 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+
     //动画框架
     implementation 'com.airbnb.android:lottie:3.5.0'
 

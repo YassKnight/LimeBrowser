@@ -11,7 +11,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
     }
 
@@ -34,4 +34,5 @@ dependencies {
 
     //组件库
     implementation 'com.lodz:pandora:1.5.0'
+//    implementation 'cn.lodz:Component:2.1.7'
 }

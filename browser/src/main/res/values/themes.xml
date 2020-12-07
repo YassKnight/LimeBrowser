@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppTheme.StartingWindowTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- 可以设置成纯颜色（设置一个和Activity UI相似的背景） -->
+<!--        <item name="android:windowBackground">@color/color_807FFFD4</item>-->
+        <!--也可以设置成一张图片 -->
+                <item name="android:windowBackground">@drawable/ic_background</item>
+    </style>
+</resources>

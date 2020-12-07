@@ -176,6 +176,12 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
     private long mExitTime = 0;
 
     @Override
+    protected void startCreate() {
+        super.startCreate();
+        setTheme(R.style.Theme_AppCompat_DayNight_NoActionBar);
+    }
+
+    @Override
     protected int getAbsLayoutId() {
         return R.layout.activity_browser_home;
     }
@@ -310,6 +316,11 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
 
     }
 
+    /**
+     * 打开网页
+     *
+     * @param url 网页对应的url路径
+     */
     private void load(String url) {
         if (mActiveTab != null) {
             mActiveTab.clearWebHistory();
@@ -319,6 +330,8 @@ public class LimeBrowserActivity extends AbsActivity implements LimeStackView.On
     }
 
     /**
+     * 添加一个窗口
+     *
      * @param animate 是否有动画，有动画时即UCRootView从下往上移
      */
     private void addTab(boolean animate) {
