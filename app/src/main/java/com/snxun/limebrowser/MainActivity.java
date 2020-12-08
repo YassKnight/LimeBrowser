@@ -16,7 +16,7 @@ public class MainActivity extends AbsActivity {
     }
 
     public void startBrowser(View view) {
-        com.snxun.browser.ui.LimeBrowserActivity.start(this, mList);
+//        com.snxun.browser.ui.LimeBrowserActivity.start(this, mList);
     }
 
     @Override

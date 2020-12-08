@@ -4,37 +4,37 @@
     android:layout_height="match_parent">
 
 
-    <FrameLayout
-        android:id="@+id/home_content_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_807FFFD4">
+<!--    <FrameLayout-->
+<!--        android:id="@+id/home_content_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@color/color_807FFFD4">-->
 
-        <com.snxun.browser.module.rootview.RootView
-            android:id="@+id/root_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/windowLight">
+<!--        <com.snxun.browser.module.rootview.RootView-->
+<!--            android:id="@+id/root_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@color/windowLight">-->
 
-            <include
-                android:id="@+id/home_root_layout"
-                layout="@layout/layout_root" />
+<!--            <include-->
+<!--                android:id="@+id/home_root_layout"-->
+<!--                layout="@layout/layout_root" />-->
 
 
-        </com.snxun.browser.module.rootview.RootView>
-    </FrameLayout>
+<!--        </com.snxun.browser.module.rootview.RootView>-->
+<!--    </FrameLayout>-->
 
-    <include
-        layout="@layout/layout_pagers_manager"
-        android:visibility="gone" />
+<!--    <include-->
+<!--        layout="@layout/layout_pagers_manager"-->
+<!--        android:visibility="gone" />-->
 
-    <include
-        android:id="@+id/home_bottom_layout"
-        layout="@layout/layout_bottom_toolbar" />
+<!--    <include-->
+<!--        android:id="@+id/home_bottom_layout"-->
+<!--        layout="@layout/layout_bottom_toolbar" />-->
 
-    <include
-        android:id="@+id/loading_layout"
-        android:visibility="gone"
-        layout="@layout/layout_loading" />
+<!--    <include-->
+<!--        android:id="@+id/loading_layout"-->
+<!--        android:visibility="gone"-->
+<!--        layout="@layout/layout_loading" />-->
 
 </FrameLayout>

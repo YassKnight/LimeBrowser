@@ -6,10 +6,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.lodz.android.pandora.widget.dialog.BaseCenterDialog;
 import com.snxun.browser.R;
 
 import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Created by Yangjw on 2020/12/2.
