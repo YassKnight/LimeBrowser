@@ -6,8 +6,10 @@ import android.content.pm.PackageManager;
 import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.snxun.browser.constant.Constants;
 
@@ -27,6 +29,22 @@ public class WebViewFactory implements ViewFactory {
     public WebView createWebView() {
         WebView w = instantiateWebView(null, android.R.attr.webViewStyle);
         initWebSetting(w);
+        return w;
+    }
+
+    @Override
+    public WebView creareCustomWebView(WebSettings settings, WebViewClient webViewClient, WebChromeClient webChromeClient) {
+        WebView w = instantiateWebView(null, android.R.attr.webViewStyle);
+        if (settings != null) {
+            WebSettings webSettings = w.getSettings();
+            webSettings = settings;
+        }
+        if (webViewClient != null) {
+            w.setWebViewClient(webViewClient);
+        }
+        if (webChromeClient != null) {
+            w.setWebChromeClient(webChromeClient);
+        }
         return w;
     }
 

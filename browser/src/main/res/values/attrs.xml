@@ -7,6 +7,8 @@
         <attr name="titleText" format="string" />
         <!--        头部布局中图标-->
         <attr name="titleIcon" format="reference" />
+        <!--        头部布局背景-->
+        <attr name="titleBackgroud" format="reference" />
 
 
         <!--        自定义头部布局-->
@@ -19,7 +21,6 @@
         <attr name="showGobackBtn" format="boolean" />
         <!--        显示底部前进按钮-->
         <attr name="showGoForwardBtn" format="boolean" />
-
 
 
     </declare-styleable>

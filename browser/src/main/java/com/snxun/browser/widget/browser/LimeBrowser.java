@@ -15,7 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -73,7 +76,11 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     private ImageView mTitleIcon;
     /**
-     * 底部标题栏布局
+     * 底部标题栏布局（不包含分隔线）
+     */
+    private LinearLayout mTitleContentLayout;
+    /**
+     * 顶部标题栏布局（包含分隔线）
      */
     private LinearLayout mTitleLayout;
     /**
@@ -84,6 +91,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * xml中设置标题图标资源
      */
     private int mTitleIconRes;
+    /**
+     * xml中设置标题栏背景资源
+     */
+    private int mTitleContentLayoutBgRes;
     /**
      * 主页内容布局资源
      */
@@ -219,6 +230,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
     private void initAttrs(Context context, AttributeSet attrs) {
         typedArray = context.obtainStyledAttributes(attrs, R.styleable.LimeBrowser);
         mTitleIconRes = typedArray.getResourceId(R.styleable.LimeBrowser_titleIcon, R.drawable.browser_icon);
+        mTitleContentLayoutBgRes = typedArray.getResourceId(R.styleable.LimeBrowser_titleBackgroud, R.color.white);
         mTitleText = typedArray.getString(R.styleable.LimeBrowser_titleText);
         mIsShowTopBar = typedArray.getBoolean(R.styleable.LimeBrowser_showTopbar, true);
         mIsShowBackBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showGobackBtn, false);
@@ -441,6 +453,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         }
         //设置标题图标
         setTitleIcon(mTitleIconRes);
+        //设置标题背景
+        setTitleBackgroud(mTitleContentLayoutBgRes);
 
         //设置标题栏显隐
         if (mIsShowTopBar) {
@@ -478,6 +492,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mTitleIcon = findViewById(R.id.limeBrowser_title_icon);
         mTitleTv = findViewById(R.id.limeBrowser_title_tv);
         mTitleLayout = findViewById(R.id.root_title_layout);
+        mTitleContentLayout = findViewById(R.id.title_content_layout);
         mPagersManagelayout = findViewById(R.id.flPagersManager);
         mLoadingLayout = findViewById(R.id.loading_layout);
         mBottomLayout = findViewById(R.id.home_bottom_layout);
@@ -512,6 +527,15 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     public void setTitleIcon(int titleIconRes) {
         mTitleIcon.setImageResource(titleIconRes);
+    }
+
+    /**
+     * 设置标题背景
+     *
+     * @param titleContentLayoutBgRes 背景资源
+     */
+    public void setTitleBackgroud(int titleContentLayoutBgRes) {
+        mTitleContentLayout.setBackgroundResource(titleContentLayoutBgRes);
     }
 
     /**
@@ -892,5 +916,51 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
             _window.setAttributes(params);
         }
+    }
+
+    /**
+     * 获取浏览器的webview
+     *
+     * @return
+     */
+    public WebView getLimeBrowserWebview() {
+        return mTabController.getCurrentWebView();
+    }
+
+    /**
+     * 设置自定义websetting
+     *
+     * @param customWebViewSetting 自定义的websetting
+     */
+    public void setCustomWebViewSetting(WebSettings customWebViewSetting) {
+        mTabController.setCustomWebSetting(customWebViewSetting);
+        //重新建立tab，保证自定义属性能应用到webview中
+        mTabController.destroy();
+        addTab(false);
+    }
+
+    /**
+     * 设置自定义WebViewClient
+     *
+     * @param customWebViewClient 自定义的WebViewClient
+     */
+    public void setCustomWebViewClient(WebViewClient customWebViewClient) {
+        mTabController.setCustomWebViewClient(customWebViewClient);
+        //重新建立tab，保证自定义属性能应用到webview中
+        mTabController.destroy();
+        addTab(false);
+
+    }
+
+    /**
+     * 设置自定义WebChromeClient
+     *
+     * @param customWebViewChromeClient 自定义的WebChromeClient
+     */
+    public void setCustomWebViewChromeClient(WebChromeClient customWebViewChromeClient) {
+        mTabController.setCustomWebViewChromeClient(customWebViewChromeClient);
+        //重新建立tab，保证自定义属性能应用到webview中
+        mTabController.destroy();
+        addTab(false);
     }
 }
