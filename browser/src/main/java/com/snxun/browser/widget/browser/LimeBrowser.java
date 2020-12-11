@@ -202,7 +202,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.layout_limebrowser, this, true);
         initAttrs(context, attrs);
-        hideBottomUIMenu();
+//        hideBottomUIMenu();
 
     }
 
