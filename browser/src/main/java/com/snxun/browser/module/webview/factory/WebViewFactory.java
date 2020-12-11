@@ -22,15 +22,16 @@ public class WebViewFactory implements ViewFactory {
         this.mContext = mContext;
     }
 
-    private WebView instantiateWebView(AttributeSet attrs, int defStyle) {
-        return new WebView(mContext, attrs, defStyle);
-    }
 
     @Override
     public WebView createWebView() {
         WebView w = instantiateWebView(null, android.R.attr.webViewStyle);
         initWebSetting(w);
         return w;
+    }
+
+    private WebView instantiateWebView(AttributeSet attrs, int defStyle) {
+        return new WebView(mContext, attrs, defStyle);
     }
 
     /**

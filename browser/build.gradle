@@ -1,14 +1,9 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
 //apply plugin: 'com.novoda.bintray-release'
-//
-//publish {
-//    userOrg = 'yknight9517'//bintray.com用户名
-//    groupId = 'com.snxun'//jcenter上的路径
-//    artifactId = 'browser'//项目名称
-//    publishVersion = '1.0.0'//版本号
-//    desc = 'this is for test'//描述，不重要
-//    website = 'https://github.com/YassKnight/LimeBrowser'//网站，最好有，不重要
-//}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -36,17 +31,31 @@ android {
 dependencies {
 
     //组件库
-    api 'com.lodz:pandora:1.5.0'
-
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
-
+//    api 'com.lodz:pandora:1.5.0'
     //动画框架
-    implementation 'com.airbnb.android:lottie:3.5.0'
-
+//    api 'com.airbnb.android:lottie:3.5.0'
     //图片加载库
-    implementation 'com.lodz:imageloader-kt:1.1.5'
+//    api 'com.lodz:imageloader-kt:1.1.5'
 
+    // RxJava生命周期
+    api 'com.trello.rxlifecycle4:rxlifecycle-components:4.0.2'
+    //cardview使用
+    api 'com.google.android.material:material:1.2.1'
+    api 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     //加载动画
-    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    api 'com.github.ybq:Android-SpinKit:1.4.0'
+
+
 }
+repositories {
+    mavenCentral()
+}
+//publish {
+//    userOrg = 'yknight9517'   //账户名
+//    groupId = 'com.snxun'     //项目组id 建议包名
+//    artifactId = 'browser'  // 项目名称 建议module 名
+//    publishVersion = '1.0.0'   //版本号
+////    repoName = 'maven'     // jcenter资源库名  如果填写的是maven 不用写这行  如果不是需要写自定义的名字
+//    desc = 'A simple browser embedded in the application that allows you to customize the interface'  // 描述
+//    website = 'https://github.com/YassKnight/LimeBrowser' //开源网址
+//}
