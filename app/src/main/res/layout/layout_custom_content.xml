@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/customLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="MissingDefaultResource">
+    android:orientation="vertical">
 
-    <TextView
+
+    <Button
+        android:id="@+id/mybtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="自定义布局" />
-</RelativeLayout>
+        android:layout_gravity="center"
+        android:text="打开百度" />
+
+    <Button
+        android:id="@+id/mybtn_zijie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="打开字节" />
+
+    <Button
+        android:id="@+id/mybtn_tenxun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="打开腾讯" />
+
+    <Button
+        android:id="@+id/mybtn_gaode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="打开高德" />
+</LinearLayout>

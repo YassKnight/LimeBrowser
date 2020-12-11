@@ -594,6 +594,7 @@ public class Tab {
 
     public boolean webCanGoBack() {
         if (mMainView != null) {
+
             return mMainView.canGoBack();
         }
         return false;
@@ -604,8 +605,13 @@ public class Tab {
             mMainView.goBack();
         }
     }
-
-    public void goForward() {
+    public boolean webCanGoForward() {
+        if (mMainView != null) {
+            return mMainView.canGoForward();
+        }
+        return false;
+    }
+    public void webGoForward() {
         if (mMainView != null) {
             mMainView.goForward();
         }

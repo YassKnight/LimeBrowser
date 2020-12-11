@@ -1,6 +1,8 @@
 package com.snxun.limebrowser;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.lodz.android.corekt.utils.ToastUtils;
 import com.lodz.android.pandora.base.activity.AbsActivity;
@@ -19,6 +21,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TestLimeBrowserActivity extends AbsActivity {
     private LimeBrowser limeBrowser;
+    private Button mBtn;
+    private Button mzijieBtn;
+    private Button mtenxunBtn;
+    private Button mgaodeBtn;
 
     @Override
     protected int getAbsLayoutId() {
@@ -29,10 +35,18 @@ public class TestLimeBrowserActivity extends AbsActivity {
     protected void findViews(@Nullable Bundle savedInstanceState) {
         super.findViews(savedInstanceState);
 
+
         limeBrowser = findViewById(R.id.browser);
 //        limeBrowser.setBottomLayoutVisibility(View.GONE);
         limeBrowser.setContentLayoutId(R.layout.layout_custom_content);
+
+        mBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn);
+        mzijieBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_zijie);
+        mtenxunBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_tenxun);
+        mgaodeBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_gaode);
+
     }
+
 
     @Override
     protected void setListeners() {
@@ -68,6 +82,32 @@ public class TestLimeBrowserActivity extends AbsActivity {
             @Override
             public void onMultiWindowsBtnClick() {
                 ToastUtils.showShort(getContext(), "点击了多窗口按钮");
+            }
+        });
+
+
+        mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                limeBrowser.load("https://www.baidu.com");
+            }
+        });
+        mzijieBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                limeBrowser.load("https://www.bytedance.com/zh/");
+            }
+        });
+        mtenxunBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                limeBrowser.load("https://www.tencent.com/zh-cn");
+            }
+        });
+        mgaodeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                limeBrowser.load("https://www.amap.com/");
             }
         });
     }

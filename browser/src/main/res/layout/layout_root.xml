@@ -42,11 +42,11 @@
     <LinearLayout
         android:id="@+id/limeBrowser_content_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/root_title_layout"
         android:orientation="vertical"
         android:paddingTop="10dp"
-        android:paddingBottom="@dimen/dimen_48dp">
+        android:layout_marginBottom="@dimen/dimen_48dp">
 
 
     </LinearLayout>

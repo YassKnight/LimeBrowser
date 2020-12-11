@@ -13,6 +13,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -24,6 +26,7 @@ import com.snxun.browser.R;
 import com.snxun.browser.controller.TabController;
 import com.snxun.browser.controller.UiController;
 import com.snxun.browser.module.bottomview.LimeBottomView;
+import com.snxun.browser.module.dialog.ExitDialog;
 import com.snxun.browser.module.rootview.RootView;
 import com.snxun.browser.module.stackview.widget.LimeStackView;
 import com.snxun.browser.module.stackview.widget.LimeTabCard;
@@ -41,9 +44,10 @@ import com.snxun.browser.widget.browser.listener.MultiWindowsBtnClickListener;
  * 对外提供的浏览器控件
  * Created by Yangjw on 2020/12/7.
  */
-public class LimeBrowser extends FrameLayout implements UiController ,LimeStackView.OnChildDismissedListener{
+public class LimeBrowser extends FrameLayout implements UiController, LimeStackView.OnChildDismissedListener {
 
     private TypedArray typedArray;
+    private Context mContext;
     /**
      * tag
      */
@@ -121,6 +125,18 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
      */
     private TextView mBottomMultiNumTv;
     /**
+     * 多窗口管理界面添加窗口按钮
+     */
+    private ImageView mAddMultiWindows;
+    /**
+     * 清空所有多窗口按钮
+     */
+    private TextView mClearMultiWindosw;
+    /**
+     * 关闭多窗口管理界面按钮
+     */
+    private TextView mCloseMultiPage;
+    /**
      * 底部主页按钮监听器
      */
     private HomeBtnClickListener mHomeBtnClickListener;
@@ -183,8 +199,40 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
 
     public LimeBrowser(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
         LayoutInflater.from(context).inflate(R.layout.layout_limebrowser, this, true);
         initAttrs(context, attrs);
+        hideBottomUIMenu();
+
+    }
+
+    public LimeBrowser(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    /**
+     * 初始化Attr资源
+     *
+     * @param context
+     * @param attrs
+     */
+    private void initAttrs(Context context, AttributeSet attrs) {
+        typedArray = context.obtainStyledAttributes(attrs, R.styleable.LimeBrowser);
+        mTitleIconRes = typedArray.getResourceId(R.styleable.LimeBrowser_titleIcon, R.drawable.browser_icon);
+        mTitleText = typedArray.getString(R.styleable.LimeBrowser_titleText);
+        mIsShowTopBar = typedArray.getBoolean(R.styleable.LimeBrowser_showTopbar, true);
+        mIsShowBackBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showGobackBtn, false);
+        mIsshowGoforawrdBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showGoForwardBtn, false);
+        typedArray.recycle();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        findView();
+        initTabConfig();
+        bindViewData();
+        bindViewClickListener();
 
     }
 
@@ -206,34 +254,10 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         }
     }
 
-    public LimeBrowser(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    private void initAttrs(Context context, AttributeSet attrs) {
-        typedArray = context.obtainStyledAttributes(attrs, R.styleable.LimeBrowser);
-        mTitleIconRes = typedArray.getResourceId(R.styleable.LimeBrowser_titleIcon, R.drawable.browser_icon);
-        mTitleText = typedArray.getString(R.styleable.LimeBrowser_titleText);
-        mIsShowTopBar = typedArray.getBoolean(R.styleable.LimeBrowser_showTopbar, true);
-        mIsShowBackBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showGobackBtn, false);
-        mIsshowGoforawrdBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showGoForwardBtn, false);
-        typedArray.recycle();
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        findView();
-        initTabConfig();
-        bindViewData();
-        bindViewClickListener();
-
-    }
-
     /**
      * @param animate 是否有动画，有动画时即UCRootView从下往上移
      */
-    private void addTab(boolean animate) {
+    public void addTab(boolean animate) {
         if (animate) {
             switchToMain();
             mContentWrapper.bringToFront();
@@ -249,6 +273,7 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mActiveTab = tab;
         mTabController.setActiveTab(mActiveTab);
     }
+
     /**
      * 隐藏tab
      *
@@ -276,10 +301,11 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mContentWrapper.setVisibility(View.VISIBLE);
         mTabsManagerUIShown = false;
     }
+
     /**
      * 切换至主界面
      */
-    private void switchToMain() {
+    public void switchToMain() {
         if (mRootView.getParent() == null) {
             mContentWrapper.addView(mRootView);
         }
@@ -298,7 +324,7 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
      * @param view               应用动画的view
      * @param onCompleteRunnable 运行的子线程
      */
-    public void animateShowFromBottomToTop(View view, final Runnable onCompleteRunnable) {
+    private void animateShowFromBottomToTop(View view, final Runnable onCompleteRunnable) {
         mContentWrapper.setVisibility(View.VISIBLE);
         ObjectAnimator animator = ObjectAnimator.ofFloat(
                 view,
@@ -318,14 +344,20 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
             }
         });
     }
+
     /**
      * 绑定控件监听器
      */
     private void bindViewClickListener() {
+        //移除窗口监听
+        mStackView.setOnChildDismissedListener(this);
         //主页按钮设置监听
         mBottomHomeImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                switchToMain();
+                mActiveTab.clearTabData();
+                mTabController.recreateWebView(mActiveTab);
                 mHomeBtnClickListener.onHomeBtnClick();
             }
         });
@@ -333,6 +365,7 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mBottomMultily.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                showTabs();
                 mMultiWindowsBtnClickListener.onMultiWindowsBtnClick();
             }
         });
@@ -340,6 +373,15 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mBottomBackImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mActiveTab != null) {
+                    if (mActiveTab.webCanGoBack()) {
+                        mActiveTab.webGoBack();
+                    } else {
+                        switchToMain();
+                        mActiveTab.clearTabData();
+                        mTabController.recreateWebView(mActiveTab);
+                    }
+                }
                 mGoBackBtnClickListener.onGoBackBtnClick();
             }
         });
@@ -347,6 +389,11 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mBottomGoForwardImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mActiveTab != null) {
+                    if (mActiveTab.webCanGoForward()) {
+                        mActiveTab.webGoForward();
+                    }
+                }
                 mGoForwardBtnClickListener.onGoForwardBtnClickListener();
             }
         });
@@ -354,8 +401,32 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mBottomExitImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                new ExitDialog(getContext()).show();
+
                 mExitBtnClickListener.onExitBtnClickListener();
 
+            }
+        });
+        //添加窗口按钮设置监听
+        mAddMultiWindows.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTab(true);
+            }
+        });
+        //关闭多窗口管理界面按钮设置监听
+        mCloseMultiPage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideTabs(true);
+            }
+        });
+        //清空所有多窗口按钮设置监听
+        mClearMultiWindosw.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTabController.destroy();
+                addTab(true);
             }
         });
     }
@@ -420,6 +491,9 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mStackView = findViewById(R.id.stack_view);
         mRootView = findViewById(R.id.root_view);
         mContentWrapper = findViewById(R.id.home_content_layout);
+        mAddMultiWindows = findViewById(R.id.ivAddPager);
+        mClearMultiWindosw = findViewById(R.id.tvClear);
+        mCloseMultiPage = findViewById(R.id.tvBack);
     }
 
     /**
@@ -445,7 +519,7 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
      *
      * @param multiText 多窗口数量
      */
-    public void setmBottomMultiText(String multiText) {
+    private void setmBottomMultiText(String multiText) {
         mBottomMultiNumTv.setText(multiText);
     }
 
@@ -546,7 +620,6 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
      * @param listener 多窗口按钮的监听器
      */
     public void setMultiWindowsBtnClickListener(MultiWindowsBtnClickListener listener) {
-        showTabs();
         this.mMultiWindowsBtnClickListener = listener;
     }
 
@@ -570,6 +643,29 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
     }
 
     /**
+     * 通过id获取主页内容布局view
+     *
+     * @param contentLayoutId 自定义内容布局的ID
+     * @return
+     */
+    public ViewGroup getContentLayoutById(int contentLayoutId) {
+        return mLimeBrowserHomeContentLayout.findViewById(contentLayoutId);
+    }
+
+    /**
+     * 如果要加载H5网页，请调用这个方法开启webview，加载网址
+     *
+     * @param url 需要加载的网页url
+     */
+    public void load(String url) {
+        if (mActiveTab != null) {
+            mActiveTab.clearWebHistory();
+            mActiveTab.loadUrl(url, null, true);
+            switchToTab();
+        }
+    }
+
+    /**
      * 进入多窗口管理界面，用动画改变选择页（可以理解为一张截图）的Y和scale
      */
     public void showTabs() {
@@ -581,7 +677,7 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mPagersManagelayout.bringToFront();
         mPagersManagelayout.setVisibility(View.VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.windowGrayL, null));
+            ((Activity) mContext).getWindow().setStatusBarColor(getResources().getColor(R.color.windowGrayL, null));
         }
         mStackView.animateShow(mTabController.getCurrentPosition(), mContentWrapper, mPagersManagelayout, true, new Runnable() {
             @Override
@@ -613,8 +709,8 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
      * @param startDelay
      * @param onCompleteRunnable
      */
-    public void animateShowFromAlpha(final View view, final boolean show,
-                                     boolean animate, int duration, int startDelay, final Runnable onCompleteRunnable) {
+    private void animateShowFromAlpha(final View view, final boolean show,
+                                      boolean animate, int duration, int startDelay, final Runnable onCompleteRunnable) {
         if (animate) {
             float startAlpha = show ? 0.0f : 1.0f;
             float finalAlpha = show ? 1.0f : 0.0f;
@@ -642,17 +738,19 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
             view.setAlpha(show ? 1.0f : 0.0f);
         }
     }
+
     /**
      * 关闭已打开的tab
      *
      * @param index 需要关闭的tab位置
      */
-    private void onTabClosed(int index) {
+    public void onTabClosed(int index) {
         removeTab(index);
         if (mStackView.getChildCount() <= 0) {
             addTab(true);
         }
     }
+
     /**
      * 移除tab集合中记录的tab
      *
@@ -661,10 +759,11 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
     private void removeTab(int index) {
         mTabController.removeTab(index);
     }
+
     /**
      * 切换至webview
      */
-    private void switchToTab() {
+    public void switchToTab() {
         if (mRootView.getParent() != null) {
             mContentWrapper.removeView(mRootView);
         }
@@ -682,10 +781,6 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
         mIsInMain = false;
     }
 
-    @Override
-    public void onWebsiteIconClicked(String url) {
-
-    }
 
     @Override
     public void selectTab(Tab tab) {
@@ -735,7 +830,7 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
 
     @Override
     public Activity getActivity() {
-        return null;
+        return (Activity) mContext;
     }
 
     @Override
@@ -779,5 +874,23 @@ public class LimeBrowser extends FrameLayout implements UiController ,LimeStackV
     @Override
     public void onChildDismissed(int index) {
         onTabClosed(index);
+    }
+
+
+    /**
+     * 隐藏虚拟按键，并且全屏
+     */
+    private void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = ((Activity) mContext).getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+
+            Window _window = ((Activity) mContext).getWindow();
+            WindowManager.LayoutParams params = _window.getAttributes();
+            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
+            _window.setAttributes(params);
+        }
     }
 }
