@@ -12,12 +12,12 @@
 ## demo样式
 
 * 浏览器主页：
-  ![主界面](https://github.com/YassKnight/LimeBrowser/blob/main/homepage.png?raw=true)
+  ![主界面](https://github.com/YassKnight/LimeBrowser/blob/main/resources/homepage.png)
 
 ---
 
 * 多窗口管理界面
-  ![多窗口界面](https://github.com/YassKnight/LimeBrowser/blob/main/multiwindows.png?raw=true)
+  ![多窗口界面](https://github.com/YassKnight/LimeBrowser/blob/main/resources/multiwindows.png)
 
 ---
 
