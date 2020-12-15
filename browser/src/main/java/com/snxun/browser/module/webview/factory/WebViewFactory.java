@@ -11,7 +11,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.snxun.browser.constant.Constants;
 
 /**
  * webview工厂
@@ -70,7 +69,7 @@ public class WebViewFactory implements ViewFactory {
         //设置渲染的优先级
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
 
-        String cacheDirPath = mContext.getFilesDir().getAbsolutePath() + Constants.APP_CACHE_DIRNAME;
+        String cacheDirPath = mContext.getFilesDir().getAbsolutePath() + "cache";
         //设置  Application Caches 缓存目录
         webSettings.setAppCachePath(cacheDirPath);
         //开启 Application Caches 功能

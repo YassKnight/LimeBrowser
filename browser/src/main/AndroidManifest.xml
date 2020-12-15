@@ -9,11 +9,6 @@
     <application
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity
-            android:name="com.snxun.browser.ui.LimeBrowserActivity"
-            android:theme="@style/AppTheme.StartingWindowTheme"
-            android:process=":browser">
 
-        </activity>
     </application>
 </manifest>
