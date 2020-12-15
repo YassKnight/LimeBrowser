@@ -4,7 +4,7 @@ plugins {
 apply plugin: 'kotlin-android'
 //apply plugin: 'com.novoda.bintray-release'
 //publish {
-//    userOrg = 'snxun'   //账户名
+//    userOrg = 'yknight'   //账户名
 //    groupId = 'com.snxun'     //项目组id 建议包名
 //    artifactId = 'browser'  // 项目名称 建议module 名
 //    publishVersion = '1.0.0'   //版本号

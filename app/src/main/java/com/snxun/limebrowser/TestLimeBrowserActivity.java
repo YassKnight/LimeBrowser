@@ -6,6 +6,7 @@ import android.widget.Button;
 
 import com.lodz.android.corekt.utils.ToastUtils;
 import com.lodz.android.pandora.base.activity.AbsActivity;
+
 import com.snxun.browser.widget.browser.LimeBrowser;
 import com.snxun.browser.widget.browser.listener.ExitBtnClickListener;
 import com.snxun.browser.widget.browser.listener.GoBackBtnClickListener;
@@ -39,7 +40,7 @@ public class TestLimeBrowserActivity extends AbsActivity {
         limeBrowser = findViewById(R.id.browser);
 //        limeBrowser.setBottomLayoutVisibility(View.GONE);
         limeBrowser.setContentLayoutId(R.layout.layout_custom_content);
-
+        limeBrowser.setTitleBackgroud(R.color.themePink);
         mBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn);
         mzijieBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_zijie);
         mtenxunBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_tenxun);

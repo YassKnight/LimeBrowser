@@ -370,7 +370,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 switchToMain();
                 mActiveTab.clearTabData();
                 mTabController.recreateWebView(mActiveTab);
-                mHomeBtnClickListener.onHomeBtnClick();
+                if (mHomeBtnClickListener != null)
+                    mHomeBtnClickListener.onHomeBtnClick();
             }
         });
         //多窗口按钮设置监听
@@ -378,7 +379,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             @Override
             public void onClick(View v) {
                 showTabs();
-                mMultiWindowsBtnClickListener.onMultiWindowsBtnClick();
+                if (mMultiWindowsBtnClickListener != null)
+                    mMultiWindowsBtnClickListener.onMultiWindowsBtnClick();
             }
         });
         //返回按钮设置监听
@@ -394,7 +396,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                         mTabController.recreateWebView(mActiveTab);
                     }
                 }
-                mGoBackBtnClickListener.onGoBackBtnClick();
+                if (mGoBackBtnClickListener != null)
+                    mGoBackBtnClickListener.onGoBackBtnClick();
             }
         });
         //前进按钮设置监听
@@ -406,7 +409,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                         mActiveTab.webGoForward();
                     }
                 }
-                mGoForwardBtnClickListener.onGoForwardBtnClickListener();
+                if (mGoForwardBtnClickListener != null) {
+                    mGoForwardBtnClickListener.onGoForwardBtnClickListener();
+                }
             }
         });
         //退出按钮设置监听
@@ -415,7 +420,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             public void onClick(View v) {
                 new ExitDialog(getContext()).show();
 
-                mExitBtnClickListener.onExitBtnClickListener();
+                if (mExitBtnClickListener != null)
+                    mExitBtnClickListener.onExitBtnClickListener();
 
             }
         });
