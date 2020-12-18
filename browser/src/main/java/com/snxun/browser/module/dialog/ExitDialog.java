@@ -1,5 +1,6 @@
 package com.snxun.browser.module.dialog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
@@ -27,6 +28,7 @@ public class ExitDialog extends BaseCenterDialog {
 
     public ExitDialog(@NotNull Context context) {
         super(context);
+        setOwnerActivity((Activity) context);
     }
 
     public ExitDialog(@NotNull Context context, int themeResId) {
@@ -96,7 +98,7 @@ public class ExitDialog extends BaseCenterDialog {
 
             Window _window = getWindow();
             WindowManager.LayoutParams params = _window.getAttributes();
-            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE;
+            params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
             _window.setAttributes(params);
         }
         super.dismiss();
