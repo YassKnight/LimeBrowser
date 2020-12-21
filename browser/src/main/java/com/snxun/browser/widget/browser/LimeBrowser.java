@@ -15,10 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -287,7 +284,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
     }
 
     /**
-     * 隐藏tab
+     * 隐藏tab(关闭多窗口管理界面)
      *
      * @param animated
      */
@@ -296,12 +293,16 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             return;
         }
         if (animated) {
-            mStackView.animateShow(mTabController.getCurrentPosition(), mContentWrapper, mPagersManagelayout, false, new Runnable() {
-                @Override
-                public void run() {
-                    mPagersManagelayout.setVisibility(View.GONE);
-                }
-            });
+            if (mTabController.getTabCount() > 0 && mTabController.getCurrentPosition() == -1) {
+                selectTab(mTabController.getTab(mTabController.getTabCount() - 1));
+            } else {
+                mStackView.animateShow(mTabController.getCurrentPosition(), mContentWrapper, mPagersManagelayout, false, new Runnable() {
+                    @Override
+                    public void run() {
+                        mPagersManagelayout.setVisibility(View.GONE);
+                    }
+                });
+            }
             View selectedChild = mStackView.getSelectedChild();
             if (selectedChild != null) {
                 LimeTabCard card = selectedChild.findViewById(R.id.ucTabCard);
@@ -933,40 +934,40 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         return mTabController.getCurrentWebView();
     }
 
-    /**
-     * 设置自定义websetting
-     *
-     * @param customWebViewSetting 自定义的websetting
-     */
-    public void setCustomWebViewSetting(WebSettings customWebViewSetting) {
-        mTabController.setCustomWebSetting(customWebViewSetting);
-        //重新建立tab，保证自定义属性能应用到webview中
-        mTabController.destroy();
-        addTab(false);
-    }
-
-    /**
-     * 设置自定义WebViewClient
-     *
-     * @param customWebViewClient 自定义的WebViewClient
-     */
-    public void setCustomWebViewClient(WebViewClient customWebViewClient) {
-        mTabController.setCustomWebViewClient(customWebViewClient);
-        //重新建立tab，保证自定义属性能应用到webview中
-        mTabController.destroy();
-        addTab(false);
-
-    }
-
-    /**
-     * 设置自定义WebChromeClient
-     *
-     * @param customWebViewChromeClient 自定义的WebChromeClient
-     */
-    public void setCustomWebViewChromeClient(WebChromeClient customWebViewChromeClient) {
-        mTabController.setCustomWebViewChromeClient(customWebViewChromeClient);
-        //重新建立tab，保证自定义属性能应用到webview中
-        mTabController.destroy();
-        addTab(false);
-    }
+//    /**
+//     * 设置自定义websetting
+//     *
+//     * @param customWebViewSetting 自定义的websetting
+//     */
+//    public void setCustomWebViewSetting(WebSettings customWebViewSetting) {
+//        mTabController.setCustomWebSetting(customWebViewSetting);
+//        //重新建立tab，保证自定义属性能应用到webview中
+//        mTabController.destroy();
+//        addTab(false);
+//    }
+//
+//    /**
+//     * 设置自定义WebViewClient
+//     *
+//     * @param customWebViewClient 自定义的WebViewClient
+//     */
+//    public void setCustomWebViewClient(WebViewClient customWebViewClient) {
+//        mTabController.setCustomWebViewClient(customWebViewClient);
+//        //重新建立tab，保证自定义属性能应用到webview中
+//        mTabController.destroy();
+//        addTab(false);
+//
+//    }
+//
+//    /**
+//     * 设置自定义WebChromeClient
+//     *
+//     * @param customWebViewChromeClient 自定义的WebChromeClient
+//     */
+//    public void setCustomWebViewChromeClient(WebChromeClient customWebViewChromeClient) {
+//        mTabController.setCustomWebViewChromeClient(customWebViewChromeClient);
+//        //重新建立tab，保证自定义属性能应用到webview中
+//        mTabController.destroy();
+//        addTab(false);
+//    }
 }

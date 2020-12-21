@@ -4,10 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.snxun.browser.R;
 import com.snxun.browser.module.webview.tab.Tab;
@@ -24,10 +21,6 @@ public class TabController {
     private static long sNextId = 1;
     private static final String POSITIONS = "positions";
     private static final String CURRENT = "current";
-    private WebSettings mCusWebSetting = null;
-    private WebViewClient mCusWebViewClient = null;
-    private WebChromeClient mCusWebViewChromeClient = null;
-
 
     public static interface OnThumbnailUpdatedListener {
         void onThumbnailUpdated(Tab t);
@@ -128,19 +121,6 @@ public class TabController {
 
     public boolean canCreateNewTab() {
         return mMaxTabs > mTabs.size();
-    }
-
-    public void setCustomWebSetting(WebSettings customWebSetting) {
-        mCusWebSetting = customWebSetting;
-    }
-
-    public void setCustomWebViewClient(WebViewClient customWebViewClient) {
-        mCusWebViewClient = customWebViewClient;
-
-    }
-
-    public void setCustomWebViewChromeClient(WebChromeClient customWebViewChromeClient) {
-        mCusWebViewChromeClient = customWebViewChromeClient;
     }
 
     public Tab createNewTab() {
@@ -607,11 +587,7 @@ public class TabController {
      * Creates a new WebView and registers it with the global settings.
      */
     private WebView createNewWebView() {
-        if (mCusWebSetting != null || mCusWebViewClient != null || mCusWebViewChromeClient != null) {
-            return mController.getWebViewFactory().creareCustomWebView(mCusWebSetting, mCusWebViewClient, mCusWebViewChromeClient);
-        } else {
-            return mController.getWebViewFactory().createWebView();
-        }
+        return mController.getWebViewFactory().createWebView();
     }
 
     /**
