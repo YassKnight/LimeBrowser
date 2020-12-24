@@ -10,9 +10,6 @@
 * Intermediate content area: Customize the style of the home page you want, using setContentLayout
 * Bottom function bar: Default display forward, back, home page, multiple Windows, exit buttons, you can use XML or setXXXVisibility Settings to display the user's buttons.The bottom button implements the listening callback, which can set the event logic you need
 
-```
-
-```
 
 ## Screenshot
 
@@ -32,7 +29,7 @@ Gradle
 
 ```
 dependencies{
-    //e.g. 'com.xw.repo:xedittext:2.2.6@aar'
+    //e.g. 'com.snxun:browser:1.0.3'
   implementation 'com.snxun:browser:${LATEST_VERSION}'
 }
 ```
