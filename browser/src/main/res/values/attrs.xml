@@ -10,17 +10,19 @@
         <!--        头部布局背景-->
         <attr name="titleBackgroud" format="reference" />
 
-
         <!--        自定义头部布局-->
         <!--        <attr name="customTopbarLayout" format="reference" />-->
-        <!--        自定义底部布局-->
-        <!--        <attr name="customBottombar" format="reference" />-->
-
 
         <!--        显示底部返回按钮-->
         <attr name="showGobackBtn" format="boolean" />
         <!--        显示底部前进按钮-->
         <attr name="showGoForwardBtn" format="boolean" />
+        <!--        显示主页按钮-->
+        <attr name="showHomeBtn" format="boolean" />
+        <!--        显示多窗口按钮-->
+        <attr name="showMultiWindowBtn" format="boolean" />
+        <!--        显示离开按钮-->
+        <attr name="showExitBtn" format="boolean" />
 
 
     </declare-styleable>

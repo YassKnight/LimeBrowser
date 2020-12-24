@@ -11,9 +11,6 @@
         android:roundIcon="@mipmap/ic_browser_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LimeBrowser">
-        <activity android:name="com.snxun.limebrowser.MainActivity">
-
-        </activity>
         <activity android:name=".TestLimeBrowserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,7 +6,6 @@ import android.widget.Button;
 
 import com.lodz.android.corekt.utils.ToastUtils;
 import com.lodz.android.pandora.base.activity.AbsActivity;
-
 import com.snxun.browser.widget.browser.LimeBrowser;
 import com.snxun.browser.widget.browser.listener.ExitBtnClickListener;
 import com.snxun.browser.widget.browser.listener.GoBackBtnClickListener;
@@ -36,15 +35,21 @@ public class TestLimeBrowserActivity extends AbsActivity {
     protected void findViews(@Nullable Bundle savedInstanceState) {
         super.findViews(savedInstanceState);
 
-
         limeBrowser = findViewById(R.id.browser);
+
+        limeBrowser.setWebViewFactory(new TestWebViewFactory());
+        limeBrowser.setContentLayout(R.layout.layout_custom_content);
+        mBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn);
+
 //        limeBrowser.setBottomLayoutVisibility(View.GONE);
-        limeBrowser.setContentLayoutId(R.layout.layout_custom_content);
+
         limeBrowser.setTitleBackgroud(R.color.themePink);
-        mBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn);
-        mzijieBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_zijie);
-        mtenxunBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_tenxun);
-        mgaodeBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn_gaode);
+
+
+        mzijieBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn_zijie);
+        mtenxunBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn_tenxun);
+        mgaodeBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn_gaode);
+
 
     }
 
@@ -61,7 +66,7 @@ public class TestLimeBrowserActivity extends AbsActivity {
         limeBrowser.setonGoBackBtnClickListener(new GoBackBtnClickListener() {
             @Override
             public void onGoBackBtnClick() {
-                ToastUtils.showShort(getContext(), "点击了后腿按钮");
+                ToastUtils.showShort(getContext(), "点击了后退按钮");
             }
         });
 

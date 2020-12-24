@@ -8,8 +8,6 @@
         android:id="@+id/browser"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:showGoForwardBtn="true"
-        app:showGobackBtn="true"
         app:titleIcon="@drawable/ic_home"
         app:titleText="xxxxx" />
 

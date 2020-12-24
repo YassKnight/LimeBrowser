@@ -1,63 +1,74 @@
-# 青柠浏览器(LimeBrowser)：
+# LimeBrowser(青柠浏览器)：
 
-## 简介
+#### Simple Android browser, quickly deployed in your application, the implementation of the application internal browser, support for multi-window management.
 
-简洁的Android浏览器，支持多窗口管理。
-浏览器布局包含：
 
-* 顶部标题栏：可自定义icon图标、标题内容及标题栏背景
-* 中间内容区域：可自定义你想要的主页样式，通过setContentLayoutId（）
-* 底部功能栏：默认显示主页、多窗口、退出按钮，可通过xml设置显示隐藏前进和后退按钮。底部按钮皆以实现监听回调，用户可以设置另外的点击事件
 
-## demo样式
+#### Layout ：
 
-* 浏览器主页：
-  ![主界面](https://github.com/YassKnight/LimeBrowser/blob/main/resources/homepage.png)
+* Top title bar: Customizable icon icon, title content, and title bar background
+* Intermediate content area: Customize the style of the home page you want, using setContentLayout
+* Bottom function bar: Default display forward, back, home page, multiple Windows, exit buttons, you can use XML or setXXXVisibility Settings to display the user's buttons.The bottom button implements the listening callback, which can set the event logic you need
+
+```
+
+```
+
+## Screenshot
+
+* HomePage：
+  ![HomePage](https://github.com/YassKnight/LimeBrowser/blob/main/resources/homepage.png)
 
 ---
 
-* 多窗口管理界面
-  ![多窗口界面](https://github.com/YassKnight/LimeBrowser/blob/main/resources/multiwindows.png)
+* Window management interface
+  ![Window management interface](https://github.com/YassKnight/LimeBrowser/blob/main/resources/multiwindows.png)
 
 ---
 
-## 快速使用
+## Quick to use
 
-buid.grade :  dependency
+Gradle
 
 ```
-implementation 'com.snxun:browser:1.0.1'
+dependencies{
+    //e.g. 'com.xw.repo:xedittext:2.2.6@aar'
+  implementation 'com.snxun:browser:${LATEST_VERSION}'
+}
 ```
-
-xml
 
 ```
 <com.snxun.browser.widget.browser.LimeBrowser
-    android:id="@+id/browser"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:showGoForwardBtn="true"
-    app:showGobackBtn="true"
-    app:titleIcon="@drawable/ic_home"
-    app:titleText="xxxxx" />
-```
-
-view
-
-```
-//设置自定义内容布局
-
-limeBrowser.setContentLayoutId(R.layout.layout_custom_content);
+        android:id="@+id/browser"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:titleIcon="@drawable/xxx"
+        app:titleText="xxxxx" />
 ```
 
 ```
-//设置标题颜色
-limeBrowser.setTitleBackgroud(R.color.themePink);
+limeBrowser.setWebViewFactory(new TestWebViewFactory());
+limeBrowser.setContentLayout(R.layout.layout_custom_content);
+mBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn);
 ```
 
-```
-//绑定自定义内容布局的控件
-mBtn = limeBrowser.getContentLayoutById(R.id.customLayout).findViewById(R.id.mybtn);
-```
+* If you need to customize WebSettings, WebViewClient, and WebChromeClient, use the setWebViewFactory method, and parameter you need to implement WebViewFactory interface
 
+## License
+
+```
+Copyright 2020 [yknight]
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
 

@@ -19,7 +19,6 @@ import android.view.View;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.snxun.browser.R;
 import com.snxun.browser.controller.TabController;
@@ -107,80 +106,16 @@ public class Tab {
         return sDefaultFavicon;
     }
 
-    // 构造WebViewClient
-    private final WebViewClient mWebViewClient = new LimeWebViewClient() {
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-            mInPageLoad = true;
-            mUpdateThumbnail = true;
-            mPageLoadProgress = INITIAL_PROGRESS;
-            mCurrentState = new PageState(mContext, url, favicon);
-            mLoadStartTime = SystemClock.uptimeMillis();
-            mWebViewController.onPageStarted(Tab.this, view, favicon);
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            syncCurrentState(view, url);
-            if (url != null && url.equals(mSavePageUrl)) {
-                mCurrentState.mTitle = mSavePageTitle;
-                mCurrentState.mUrl = mSavePageUrl;
-            }
-            mWebViewController.onPageFinished(Tab.this);
-        }
-    };
-
-    // 构造 WebChromeClient
-    private WebChromeClient mWebChromeClient = new LimeWebChromeClient() {
-        @Override
-        public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-            return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
-        }
-
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            super.onProgressChanged(view, newProgress);
-            mPageLoadProgress = newProgress;
-            if (newProgress == 100) {
-                mInPageLoad = false;
-                syncCurrentState(view, view.getUrl());
-            }
-            mWebViewController.onProgressChanged(Tab.this);
-            if (mUpdateThumbnail && newProgress == 100) {
-                mUpdateThumbnail = false;
-            }
-        }
-
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            super.onReceivedTitle(view, title);
-            mCurrentState.mTitle = title;
-            mWebViewController.onReceivedTitle(Tab.this, title);
-        }
-
-        @Override
-        public void onReceivedIcon(WebView view, Bitmap icon) {
-            super.onReceivedIcon(view, icon);
-            mCurrentState.mFavicon = icon;
-//            mWebViewController.onFavicon(Tab.this, view, icon);
-        }
-    };
 
     public void loadBlank() {
         loadUrl(DEFAULT_BLANK_URL, null, false);
     }
 
-    public Tab(WebViewController webViewController, WebView view) {
-        this(webViewController, view, null);
+    public Tab(WebViewController webViewController) {
+        this(webViewController, null);
     }
 
     public Tab(WebViewController webViewController, Bundle state) {
-        this(webViewController, null, state);
-    }
-
-    public Tab(WebViewController webViewController, WebView view, Bundle state) {
         mSavePageJob = new HashMap<Integer, Long>();
         mWebViewController = webViewController;
         mContext = mWebViewController.getContext();
@@ -193,7 +128,7 @@ public class Tab {
         if (getId() == -1) {
             mId = TabController.getNextId();
         }
-        setWebView(view);
+        setWebView(createNewWebView());
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -259,7 +194,7 @@ public class Tab {
      * Sets the WebView for this tab, correctly removing the old WebView from
      * the container view.
      */
-    public void setWebView(WebView w, boolean restore) {
+    private void setWebView(WebView w, boolean restore) {
         if (mMainView == w) {
             return;
         }
@@ -277,8 +212,8 @@ public class Tab {
         mMainView = w;
         // attach the WebViewClient, WebChromeClient and DownloadListener
         if (mMainView != null) {
-            mMainView.setWebViewClient(mWebViewClient);
-            mMainView.setWebChromeClient(mWebChromeClient);
+//            mMainView.setWebViewClient(mWebViewClient);
+//            mMainView.setWebChromeClient(mWebChromeClient);
             TabController tc = mWebViewController.getTabController();
             if (restore && (mSavedState != null)) {
                 WebBackForwardList restoredState
@@ -292,6 +227,15 @@ public class Tab {
     }
 
     /**
+     * Recreate the main WebView of the given tab.
+     */
+    public void recreateWebView() {
+
+        this.destroy();
+        setWebView(createNewWebView(), false);
+    }
+
+    /**
      * Destroy the tab's main WebView and subWindow if any
      */
     public void destroy() {
@@ -301,11 +245,6 @@ public class Tab {
             WebView webView = mMainView;
             setWebView(null);
             webView.destroy();
-        }
-        if (mSavePageJob == null) {
-            return;
-        }
-        if (mSavePageJob.size() != 0) {
         }
     }
 
@@ -605,12 +544,14 @@ public class Tab {
             mMainView.goBack();
         }
     }
+
     public boolean webCanGoForward() {
         if (mMainView != null) {
             return mMainView.canGoForward();
         }
         return false;
     }
+
     public void webGoForward() {
         if (mMainView != null) {
             mMainView.goForward();
@@ -645,4 +586,79 @@ public class Tab {
             return !TextUtils.isEmpty(mUrl);
         }
     }
+
+
+    /**
+     * Creates a new WebView and registers it with the global settings.
+     */
+    private WebView createNewWebView() {
+        WebView w = mWebViewController.getWebViewFactory().createWebView(mContext);
+        LimeWebViewClient webViewClient = mWebViewController.getWebViewFactory().createWebViewClient();
+        if (webViewClient != null) {
+            webViewClient.setOnPageChangeListener(new LimeWebViewClient.onPageChangeListener() {
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    mInPageLoad = true;
+                    mUpdateThumbnail = true;
+                    mPageLoadProgress = INITIAL_PROGRESS;
+                    mCurrentState = new PageState(mContext, url, favicon);
+                    mLoadStartTime = SystemClock.uptimeMillis();
+                    mWebViewController.onPageStarted(Tab.this, view, favicon);
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    syncCurrentState(view, url);
+                    if (url != null && url.equals(mSavePageUrl)) {
+                        mCurrentState.mTitle = mSavePageTitle;
+                        mCurrentState.mUrl = mSavePageUrl;
+                    }
+                    mWebViewController.onPageFinished(Tab.this);
+                }
+            });
+            w.setWebViewClient(webViewClient);
+        }
+        LimeWebChromeClient chromeClient = mWebViewController.getWebViewFactory().createWebChromeClient();
+        if (chromeClient != null) {
+            chromeClient.setonPageChangeListener(new LimeWebChromeClient.onPageChangeListener() {
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    mPageLoadProgress = newProgress;
+                    if (newProgress == 100) {
+                        mInPageLoad = false;
+                        syncCurrentState(view, view.getUrl());
+                    }
+                    mWebViewController.onProgressChanged(Tab.this);
+                    if (mUpdateThumbnail && newProgress == 100) {
+                        mUpdateThumbnail = false;
+                    }
+                }
+
+                @Override
+                public void onReceivedTitle(WebView view, String title) {
+                    mCurrentState.mTitle = title;
+                    mWebViewController.onReceivedTitle(Tab.this, title);
+                }
+
+                @Override
+                public void onReceivedIcon(WebView view, Bitmap icon) {
+                    mCurrentState.mFavicon = icon;
+//            mWebViewController.onFavicon(Tab.this, view, icon);
+                }
+
+                @Override
+                public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {
+
+                }
+
+                @Override
+                public void onHideCustomView() {
+
+                }
+            });
+            w.setWebChromeClient(chromeClient);
+        }
+        return w;
+    }
+
 }
