@@ -13,12 +13,7 @@
 
 ## Screenshot
 
-* HomePage：
   ![HomePage](https://github.com/YassKnight/LimeBrowser/blob/main/resources/homepage.png)
-
----
-
-* Window management interface
   ![Window management interface](https://github.com/YassKnight/LimeBrowser/blob/main/resources/multiwindows.png)
 
 ---

@@ -10,12 +10,7 @@
 
 ## 样式截图
 
-* 主页：
   ![HomePage](https://github.com/YassKnight/LimeBrowser/blob/main/resources/homepage.png)
-
----
-
-* 多窗口管理界面
   ![Window management interface](https://github.com/YassKnight/LimeBrowser/blob/main/resources/multiwindows.png)
 
 ---
