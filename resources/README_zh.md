@@ -1,29 +1,26 @@
 # LimeBrowser(青柠浏览器)：
 
-#### Simple Android browser, quickly deployed in your application, the implementation of the application internal browser, support for multi-window management.
+#### 简单的Android浏览器，快速部署在您的应用程序中，实现应用程序内部浏览器，支持多窗口管理。
 
-[中文文档](https://github.com/YassKnight/LimeBrowser/issues)
+#### 布局 
 
-#### Layout 
+* 顶部标题栏:自定义图标，标题内容和标题栏背景
+* 中间内容区:使用setContentLayout自定义你需要的主页样式
+* 底部功能栏:默认显示前进、后退、主页、多个窗口、退出按钮，可以使用XML或setXXXVisibility设置需要显示的按钮。底部按钮实现监听回调，可以设置您需要的事件逻辑
 
-* Top title bar: Customizable icon icon, title content, and title bar background
-* Intermediate content area: Customize the style of the home page you want, using setContentLayout
-* Bottom function bar: Default display forward, back, home page, multiple Windows, exit buttons, you can use XML or setXXXVisibility Settings to display the user's buttons.The bottom button implements the listening callback, which can set the event logic you need
+## 样式截图
 
-
-## Screenshot
-
-* HomePage：
+* 主页：
   ![HomePage](https://github.com/YassKnight/LimeBrowser/blob/main/resources/homepage.png)
 
 ---
 
-* Window management interface
+* 多窗口管理界面
   ![Window management interface](https://github.com/YassKnight/LimeBrowser/blob/main/resources/multiwindows.png)
 
 ---
 
-## Quick to use
+## 快速使用
 
 Gradle
 
@@ -49,12 +46,12 @@ limeBrowser.setContentLayout(R.layout.layout_custom_content);
 mBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn);
 ```
 
-* If you need to customize WebSettings, WebViewClient, and WebChromeClient, use the setWebViewFactory method, and parameter you need to implement WebViewFactory interface
+* 如果你需要自定义WebSettings, WebViewClient，和WebChromeClient，使用setWebViewFactory方法，参数需要实现WebViewFactory接口
 
-## Issues
-* If your partner finds a BUG or has any suggestions,Welcome to [Github Issues](https://github.com/YassKnight/LimeBrowser/issues) Ask your questions
+## 问题
+* 如果你发现了BUG或有任何建议，欢迎到 [Github Issues](https://github.com/YassKnight/LimeBrowser/issues) 提出你的问题或者建议
 
-## License
+## 许可证
 
 ```
 Copyright 2020 [yknight]
