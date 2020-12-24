@@ -2,7 +2,7 @@
 
 #### Simple Android browser, quickly deployed in your application, the implementation of the application internal browser, support for multi-window management.
 
-[中文文档](https://github.com/YassKnight/LimeBrowser/issues)
+[中文文档](https://github.com/YassKnight/LimeBrowser/blob/main/resources/README_zh.md)
 
 #### Layout 
 
