@@ -33,9 +33,24 @@
         android:id="@+id/home_bottom_layout"
         layout="@layout/layout_bottom_toolbar" />
 
-    <include
-        android:id="@+id/loading_layout"
-        layout="@layout/layout_loading"
-        android:visibility="gone" />
+    <!--    <include-->
+    <!--        android:id="@+id/loading_layout"-->
+    <!--        layout="@layout/layout_loading"-->
+    <!--        android:visibility="gone" />-->
+
+<!--    <include-->
+<!--        android:id="@+id/home_searchbar_layout"-->
+<!--        layout="@layout/layout_searchbar"-->
+<!--        android:visibility="gone" />-->
+
+    <ProgressBar
+        android:id="@+id/pbFloatSearchProgress"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_4dp"
+        android:max="100"
+        android:progress="50"
+        android:progressTint="@color/purple_200"
+        android:visibility="invisible" />
 
 </FrameLayout>

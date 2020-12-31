@@ -16,10 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
@@ -104,10 +105,6 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * 多窗口管理界面布局
      */
     private FrameLayout mPagersManagelayout;
-    /**
-     * 加载界面布局
-     */
-    private RelativeLayout mLoadingLayout;
     /**
      * 底部功能栏布局
      */
@@ -208,6 +205,22 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * 布局：存放rootview的帧布局
      */
     private FrameLayout mContentWrapper;
+    /**
+     * 布局：顶部搜索栏
+     */
+    private LinearLayout mSearchBarLayout;
+    /**
+     * 加载进度条
+     */
+    private ProgressBar mProgressBar;
+    /**
+     * 搜索栏右侧搜索按钮
+     */
+    private ImageView mSearchBtn;
+    /**
+     * 搜索栏地址编辑框
+     */
+    private EditText mSearchBarUrlEdt;
     /**
      * 当前显示的是否是主界面
      */
@@ -480,6 +493,12 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 load("https://github.com/YassKnight/LimeBrowser");
             }
         });
+        mSearchBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                load(mSearchBarUrlEdt.getText().toString().trim());
+            }
+        });
     }
 
     /**
@@ -524,7 +543,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         //设置浏览器默认首页布局
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_default_content, null);
-        mLimeBrowserHomeContentLayout.addView(view, -1, params);
+        mLimeBrowserHomeContentLayout.addView(view, params);
 
         mDefaultBtn = mLimeBrowserHomeContentLayout.findViewById(R.id.default_btn);
 
@@ -539,7 +558,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mTitleLayout = findViewById(R.id.root_title_layout);
         mTitleContentLayout = findViewById(R.id.title_content_layout);
         mPagersManagelayout = findViewById(R.id.flPagersManager);
-        mLoadingLayout = findViewById(R.id.loading_layout);
+        mSearchBarLayout = findViewById(R.id.limeBrowser_searchbar_layout);
+        mProgressBar = findViewById(R.id.pbFloatSearchProgress);
         mBottomLayout = findViewById(R.id.home_bottom_layout);
         mBottomBackImg = findViewById(R.id.bottom_back_img);
         mBottomGoForwardImg = findViewById(R.id.bottom_forward_img);
@@ -555,6 +575,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mAddMultiWindows = findViewById(R.id.ivAddPager);
         mClearMultiWindosw = findViewById(R.id.tvClear);
         mCloseMultiPage = findViewById(R.id.tvBack);
+
+        mSearchBtn = findViewById(R.id.ivSearch);
+        mSearchBarUrlEdt = findViewById(R.id.edSearchUrl);
     }
 
     /**
@@ -599,7 +622,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param titleLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
      */
     public void setTitleLayoutVisibility(int titleLayoutVisibility) {
-        mTitleLayout.setVisibility(titleLayoutVisibility);
+        mTitleContentLayout.setVisibility(titleLayoutVisibility);
     }
 
     /**
@@ -611,6 +634,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mPagersManagelayout.setVisibility(pagersManagelayoutVisibility);
     }
 
+
     /**
      * 设置底部栏显隐
      *
@@ -620,14 +644,6 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mBottomLayout.setVisibility(bottomLayoutVisibility);
     }
 
-    /**
-     * 设置加载界面显隐
-     *
-     * @param loadingLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
-     */
-    public void setLoadingLayoutVisibility(int loadingLayoutVisibility) {
-        mLoadingLayout.setVisibility(loadingLayoutVisibility);
-    }
 
     /**
      * 设置底部返回按显隐
@@ -663,6 +679,24 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     public void setMultiWindowBtnVisibility(int multiWindowBtnVisibility) {
         mBottomMultily.setVisibility(multiWindowBtnVisibility);
+    }
+
+    /**
+     * 设置顶部搜索栏显隐
+     *
+     * @param searchBarLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
+     */
+    public void setSearchBarLayoutVisibility(int searchBarLayoutVisibility) {
+        mSearchBarLayout.setVisibility(searchBarLayoutVisibility);
+    }
+
+    /**
+     * 判断搜索栏是否显示
+     *
+     * @return true:显示 / false：隐藏
+     */
+    public boolean isSearchBarLayoutShow() {
+        return mSearchBarLayout.getVisibility() == VISIBLE;
     }
 
     /**
@@ -732,11 +766,23 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             mLimeBrowserHomeContentLayout.removeAllViews();
             View view = LayoutInflater.from(getContext()).inflate(mContentLayoutRes, null);
-            mLimeBrowserHomeContentLayout.addView(view, -1, params);
+            mLimeBrowserHomeContentLayout.addView(view, params);
             mCustomContentLayout = (ViewGroup) view;
         } catch (Exception e) {
             Log.e(TAG, "setContentLayoutId: " + e);
         }
+    }
+
+    /**
+     * 由于主页和webview直接之间切换会直接removeallview，所以需要手动添加搜索栏
+     */
+    private void addSearchBarLayout() {
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_searchbar, null);
+        view.findViewById(R.id.ivFloatSearchRefresh).setVisibility(VISIBLE);
+        view.findViewById(R.id.ivSearchBack).setVisibility(VISIBLE);
+        view.bringToFront();
+        mContentWrapper.addView(view, params);
     }
 
     /**
@@ -878,6 +924,12 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                         ViewGroup.LayoutParams.MATCH_PARENT);
             }
             lp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dimen_48dp);
+            //添加搜索栏
+            if (isSearchBarLayoutShow()) {
+                addSearchBarLayout();
+                lp.topMargin = getResources().getDimensionPixelSize(R.dimen.dimen_48dp);
+            }
+
             mContentWrapper.addView(view, lp);
         }
         mIsInMain = false;
@@ -955,20 +1007,20 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
 
     @Override
     public void onPageStarted(Tab tab, WebView webView, Bitmap favicon) {
-        mLoadingLayout.setVisibility(View.VISIBLE);
-        mLoadingLayout.bringToFront();
+        mProgressBar.bringToFront();
+        mProgressBar.setVisibility(VISIBLE);
     }
 
     @Override
     public void onPageFinished(Tab tab) {
+        mProgressBar.setVisibility(INVISIBLE);
         tab.shouldUpdateThumbnail(true);
         mTabAdapter.notifyDataSetChanged();
-        mLoadingLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void onProgressChanged(Tab tab) {
-
+        mProgressBar.setProgress(tab.getPageLoadProgress());
     }
 
     @Override
@@ -980,4 +1032,5 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
     public void onChildDismissed(int index) {
         onTabClosed(index);
     }
+
 }

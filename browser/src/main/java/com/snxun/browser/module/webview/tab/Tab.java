@@ -212,9 +212,6 @@ public class Tab {
         mMainView = w;
         // attach the WebViewClient, WebChromeClient and DownloadListener
         if (mMainView != null) {
-//            mMainView.setWebViewClient(mWebViewClient);
-//            mMainView.setWebChromeClient(mWebChromeClient);
-            TabController tc = mWebViewController.getTabController();
             if (restore && (mSavedState != null)) {
                 WebBackForwardList restoredState
                         = mMainView.restoreState(mSavedState);

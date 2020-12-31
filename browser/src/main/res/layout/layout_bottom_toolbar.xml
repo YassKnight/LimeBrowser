@@ -24,8 +24,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:padding="@dimen/dimen_12dp"
-            android:src="@drawable/ic_back"
-            android:visibility="gone" />
+            android:src="@drawable/ic_back" />
 
         <ImageView
             android:id="@+id/bottom_forward_img"
@@ -35,7 +34,7 @@
             android:layout_weight="1"
             android:padding="@dimen/dimen_12dp"
             android:src="@drawable/ic_forward"
-            android:visibility="gone" />
+            />
 
         <ImageView
             android:id="@+id/bottom_home_img"
