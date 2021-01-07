@@ -13,6 +13,7 @@
     <dimen name="dimen_36dp">36dp</dimen>
     <dimen name="dimen_44dp">44dp</dimen>
     <dimen name="dimen_48dp">48dp</dimen>
+    <dimen name="dimen_50dp">50dp</dimen>
     <dimen name="dimen_54dp">54dp</dimen>
     <dimen name="dimen_64dp">64dp</dimen>
     <dimen name="dimen_72dp">72dp</dimen>

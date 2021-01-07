@@ -2,16 +2,16 @@ plugins {
     id 'com.android.library'
 }
 apply plugin: 'kotlin-android'
-apply plugin: 'com.novoda.bintray-release'
-publish {
-    userOrg = 'yknight'   //账户名
-    groupId = 'com.snxun'     //项目组id 建议包名
-    artifactId = 'browser'  // 项目名称 建议module 名
-    publishVersion = '1.0.3'   //版本号
-//    repoName = 'maven'     // jcenter资源库名  如果填写的是maven 不用写这行  如果不是需要写自定义的名字
-    desc = 'A simple browser embedded in the application that allows you to customize the interface'  // 描述
-    website = 'https://github.com/YassKnight/LimeBrowser' //开源网址
-}
+//apply plugin: 'com.novoda.bintray-release'
+//publish {
+//    userOrg = 'yknight'   //账户名
+//    groupId = 'com.snxun'     //项目组id 建议包名
+//    artifactId = 'browser'  // 项目名称 建议module 名
+//    publishVersion = '1.0.3'   //版本号
+////    repoName = 'maven'     // jcenter资源库名  如果填写的是maven 不用写这行  如果不是需要写自定义的名字
+//    desc = 'A simple browser embedded in the application that allows you to customize the interface'  // 描述
+//    website = 'https://github.com/YassKnight/LimeBrowser' //开源网址
+//}
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"

@@ -38,10 +38,10 @@
     <!--        layout="@layout/layout_loading"-->
     <!--        android:visibility="gone" />-->
 
-<!--    <include-->
-<!--        android:id="@+id/home_searchbar_layout"-->
-<!--        layout="@layout/layout_searchbar"-->
-<!--        android:visibility="gone" />-->
+    <include
+        android:id="@+id/limeBrowser_searchbar_layout"
+        layout="@layout/layout_searchbar"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/pbFloatSearchProgress"

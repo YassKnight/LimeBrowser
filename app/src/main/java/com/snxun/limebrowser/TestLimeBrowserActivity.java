@@ -30,22 +30,24 @@ public class TestLimeBrowserActivity extends AbsActivity {
         super.findViews(savedInstanceState);
 
         limeBrowser = findViewById(R.id.browser);
-
-        limeBrowser.setWebViewFactory(new TestWebViewFactory());
-        limeBrowser.setContentLayout(R.layout.layout_custom_content);
-        mBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn);
-
+        //设置底部显隐，默认显示
 //        limeBrowser.setBottomLayoutVisibility(View.GONE);
 
         limeBrowser.setTitleBackgroud(R.color.themePink);
-        //设置标题栏显隐
+
+        //设置标题栏显隐 ,默认显示
         limeBrowser.setTitleLayoutVisibility(View.GONE);
-        //设置搜索栏显隐
+
+        //设置搜索栏显隐(如果搜索栏和标题栏同时设置显示，只显示搜索栏)
         limeBrowser.setSearchBarLayoutVisibility(View.VISIBLE);
 
-
+        limeBrowser.setContentLayout(R.layout.layout_custom_content);
+        mBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn);
         mtenxunBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn_tenxun);
         mBiliBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn_bili);
+
+        //webview工厂建议最后一步设置
+        limeBrowser.setWebViewFactory(new TestWebViewFactory());
 
 
     }
@@ -67,6 +69,8 @@ public class TestLimeBrowserActivity extends AbsActivity {
         mBtn.setOnClickListener(v -> limeBrowser.load("https://www.baidu.com"));
         mtenxunBtn.setOnClickListener(v -> limeBrowser.load("https://www.tencent.com/zh-cn"));
         mBiliBtn.setOnClickListener(v -> limeBrowser.load("https://www.bilibili.com/"));
+
+
     }
 
 }

@@ -33,11 +33,6 @@
                 android:text="@string/item_app_name" />
         </LinearLayout>
 
-        <include
-            android:id="@+id/limeBrowser_searchbar_layout"
-            layout="@layout/layout_searchbar"
-            android:visibility="gone" />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

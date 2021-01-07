@@ -10,4 +10,7 @@
     <string name="back">返回</string>
     <string name="clear">清空</string>
     <string name="default_url">https://github.com/YassKnight/LimeBrowser</string>
+    <string name="browsing_history">浏览历史</string>
+    <string name="bookmark">收藏书签</string>
+    <string name="clear_browsing_history">清空浏览记录</string>
 </resources>
