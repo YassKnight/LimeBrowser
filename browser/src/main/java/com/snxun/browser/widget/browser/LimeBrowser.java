@@ -30,6 +30,7 @@ import com.snxun.browser.R;
 import com.snxun.browser.controller.TabController;
 import com.snxun.browser.controller.UiController;
 import com.snxun.browser.module.bottomview.LimeBottomView;
+import com.snxun.browser.module.database.DaoManager;
 import com.snxun.browser.module.dialog.ExitDialog;
 import com.snxun.browser.module.dialogfragment.searchdialog.TopSearchDialogFragment;
 import com.snxun.browser.module.rootview.RootView;
@@ -228,6 +229,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     private boolean mIsInMain = true;
 
+    private DaoManager mDaoManager;
+
     public LimeBrowser(Context context) {
         super(context);
     }
@@ -237,6 +240,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.layout_limebrowser, this, true);
         initAttrs(context, attrs);
+        mDaoManager = DaoManager.getInstance(mContext);
     }
 
     public LimeBrowser(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -863,7 +867,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             mActiveTab.clearWebHistory();
             mActiveTab.loadUrl(url, null, true);
             //到时需要实现无痕浏览，可以价格Global变量配置判断
-
+            mDaoManager.insertHistory(mActiveTab.getTitle(), url);
             switchToTab();
         }
     }
