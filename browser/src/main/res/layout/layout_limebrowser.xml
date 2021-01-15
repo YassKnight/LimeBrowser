@@ -50,7 +50,7 @@
         android:layout_height="@dimen/dimen_4dp"
         android:max="100"
         android:progress="50"
-        android:progressTint="@color/purple_200"
+        android:progressTint="@color/color_2277ff"
         android:visibility="invisible" />
 
 </FrameLayout>
