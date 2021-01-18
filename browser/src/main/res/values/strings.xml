@@ -1,10 +1,10 @@
 <resources>
     <string name="item_app_name">LimeBrowser</string>
     <string name="main_exit_app">再按一次返回键,可直接退出程序</string>
-    <string name="defaultWebTitle">主页</string>
+    <string name="defaultWebTitle">首页</string>
     <string name="title_bar_loading">loading</string>
-    <string name="exit_dialog_title">退出提示</string>
-    <string name="exit_dialog_content">确认退出浏览器？</string>
+    <string name="exit_dialog_title">提示</string>
+    <string name="exit_dialog_content">是否退出浏览器</string>
     <string name="exit_dialog_sure">确认</string>
     <string name="exit_dialog_cancel">取消</string>
     <string name="back">返回</string>

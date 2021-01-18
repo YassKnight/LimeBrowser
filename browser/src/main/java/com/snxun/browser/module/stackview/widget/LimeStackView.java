@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
     private static final String TAG = "UCStackView";
     private static final int INVALID_POINTER = -1;
@@ -205,14 +204,14 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
             float scale = calculateProgress2Scale(i, progress);
             if (scale < mViewMinScale) {
                 scaleView(mViewMinScale, child);
-                translateViewY(mViewMinTop, child);
+                translateViewY(mViewMinTop, child, i);
                 child.setVisibility(GONE);
                 Log.e(TAG, "滤过第" + i + "个child" + mIsScrolling);
                 continue;
             }
             if (scale > mViewMaxScale) {
                 scaleView(mViewMaxScale, child);
-                translateViewY(mViewMaxTop, child);
+                translateViewY(mViewMaxTop, child, i);
                 child.setVisibility(GONE);
                 Log.e(TAG, "滤过第" + i + "个child" + mIsScrolling);
                 continue;
@@ -222,7 +221,7 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
             }
             transY = calculateProgress2TransY(i, progress);
             Log.e(TAG, "layoutChildren :: progress =:" + progress + ",transY =:" + transY);
-            translateViewY(transY, child);
+            translateViewY(transY, child, i);
             scaleView(scale, child);
         }
         invalidate();
@@ -277,8 +276,11 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
     }
 
     // 更新view的y
-    private void translateViewY(float transY, View view) {
-        view.setTranslationY(transY);
+    private void translateViewY(float transY, View view, int index) {
+        if (index == 0)
+            view.setTranslationY(transY);
+        else
+            view.setTranslationY(transY * 3);
     }
 
     // 更新view的z

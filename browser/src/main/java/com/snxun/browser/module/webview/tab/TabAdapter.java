@@ -58,7 +58,7 @@ public class TabAdapter extends StackAdapter<Tab> {
     protected LimeStackView.ViewHolder onCreateView(ViewGroup parent, int viewType) {
         CardView card = (CardView) mInflater.inflate(R.layout.layout_recycler_card, parent, false);
         card.setCardElevation(4);
-        card.setRadius(16);
+        card.setRadius(mContext.getResources().getDimension(R.dimen.dimen_8dp));
         mInflater.inflate(R.layout.layout_tab_card, card, true);
         return new TabAdapter.TabViewHolder(card);
     }

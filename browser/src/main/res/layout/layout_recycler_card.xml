@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/card"
-    card:cardUseCompatPadding="true"
+    card:cardCornerRadius="@dimen/dimen_4dp"
     card:cardElevation="@dimen/dimen_2dp"
-    card:cardCornerRadius="@dimen/dimen_4dp" />
+    card:cardUseCompatPadding="true" />

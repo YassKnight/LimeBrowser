@@ -39,7 +39,7 @@ public class TestLimeBrowserActivity extends AbsActivity {
         limeBrowser.setTitleLayoutVisibility(View.GONE);
 
         //设置搜索栏显隐(如果搜索栏和标题栏同时设置显示，只显示搜索栏)
-        limeBrowser.setSearchBarLayoutVisibility(View.VISIBLE);
+        limeBrowser.setSearchBarLayoutVisibility(View.GONE);
 
         limeBrowser.setContentLayout(R.layout.layout_custom_content);
         mBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn);

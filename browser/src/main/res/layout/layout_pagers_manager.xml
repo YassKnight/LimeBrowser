@@ -5,38 +5,14 @@
     android:background="@color/windowGrayL"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_48dp">
-
-        <TextView
-            android:id="@+id/tvClear"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:padding="@dimen/dimen_12dp"
-            android:text="@string/clear"
-            android:textColor="@color/windowLight"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvBack"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:padding="@dimen/dimen_12dp"
-            android:text="@string/back"
-            android:textColor="@color/windowLight"
-            android:textSize="14sp" />
-    </RelativeLayout>
 
     <com.snxun.browser.module.stackview.widget.LimeStackView
         android:id="@+id/stack_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"></com.snxun.browser.module.stackview.widget.LimeStackView>
+        android:layout_weight="1">
+
+    </com.snxun.browser.module.stackview.widget.LimeStackView>
 
     <RelativeLayout
         android:id="@+id/bottomBar"
@@ -44,6 +20,18 @@
         android:layout_height="@dimen/dimen_48dp"
         android:layout_gravity="bottom"
         android:background="@color/windowGrayM">
+
+        <TextView
+            android:id="@+id/tvClear"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/dimen_24dp"
+            android:gravity="center"
+            android:padding="@dimen/dimen_12dp"
+            android:text="@string/clear"
+            android:textColor="@color/windowLight"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/ivAddPager"
@@ -53,5 +41,16 @@
             android:padding="@dimen/dimen_12dp"
             android:src="@drawable/ic_menu_add" />
 
+        <TextView
+            android:id="@+id/tvBack"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dimen_24dp"
+            android:gravity="center"
+            android:padding="@dimen/dimen_12dp"
+            android:text="@string/back"
+            android:textColor="@color/windowLight"
+            android:textSize="14sp" />
     </RelativeLayout>
 </FrameLayout>

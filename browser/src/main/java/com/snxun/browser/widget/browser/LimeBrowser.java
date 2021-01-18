@@ -389,6 +389,35 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         }
         mActiveTab.stopLoading();
         mIsInMain = true;
+        mBottomHomeImg.setClickable(false);
+        setBackBtnClickable(false);
+        setForwardBtnClickable(false);
+    }
+
+    /**
+     * 设置后退按钮是否可以点击
+     *
+     * @param clickable true：可以点击，false：不可点击
+     */
+    private void setBackBtnClickable(boolean clickable) {
+        mBottomBackImg.setClickable(clickable);
+        if (clickable)
+            mBottomBackImg.setImageResource(R.drawable.ic_back);
+        else
+            mBottomBackImg.setImageResource(R.drawable.ic_back_dis);
+    }
+
+    /**
+     * 设置前进按钮是否可以点击
+     *
+     * @param clickable true：可以点击，false：不可点击
+     */
+    private void setForwardBtnClickable(boolean clickable) {
+        mBottomGoForwardImg.setClickable(clickable);
+        if (clickable)
+            mBottomGoForwardImg.setImageResource(R.drawable.ic_forward);
+        else
+            mBottomGoForwardImg.setImageResource(R.drawable.ic_forward_dis);
     }
 
     /**
@@ -983,6 +1012,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             mContentWrapper.addView(view, lp);
         }
         mIsInMain = false;
+        mBottomHomeImg.setClickable(true);
+        setBackBtnClickable(mActiveTab.getWebView().canGoBack());
+        setForwardBtnClickable(mActiveTab.getWebView().canGoForward());
     }
 
 
@@ -1067,6 +1099,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mProgressBar.setVisibility(INVISIBLE);
         tab.shouldUpdateThumbnail(true);
         mTabAdapter.notifyDataSetChanged();
+        setBackBtnClickable(mActiveTab.getWebView().canGoBack());
+        setForwardBtnClickable(mActiveTab.getWebView().canGoForward());
     }
 
     @Override

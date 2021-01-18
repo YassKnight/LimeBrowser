@@ -23,4 +23,5 @@ public interface WebViewController {
     void onPageFinished(Tab tab);
     void onProgressChanged(Tab tab);
     void onReceivedTitle(Tab tab,final String title);
+
 }
