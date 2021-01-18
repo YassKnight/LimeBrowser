@@ -24,7 +24,7 @@ Gradle
 
 ```
 dependencies{
-    //e.g. 'com.snxun:browser:1.0.3'
+    //e.g. 'com.snxun:browser:1.0.5'
   implementation 'com.snxun:browser:${LATEST_VERSION}'
 }
 ```
