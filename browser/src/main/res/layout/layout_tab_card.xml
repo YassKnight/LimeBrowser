@@ -46,6 +46,6 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:padding="@dimen/dimen_12dp"
-            android:src="@drawable/ic_close" />
+            android:src="@drawable/ic_tab_delete" />
     </RelativeLayout>
 </com.snxun.browser.module.stackview.widget.LimeTabCard>
