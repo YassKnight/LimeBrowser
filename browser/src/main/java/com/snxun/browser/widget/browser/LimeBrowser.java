@@ -116,22 +116,24 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * 底部返回按钮
      */
     private ImageView mBottomBackImg;
+    private LinearLayout mBottomBackLy;
     /**
      * 底部前进按钮
      */
     private ImageView mBottomGoForwardImg;
+    private LinearLayout mBottomGoForwardLy;
     /**
      * 底部主页按钮
      */
-    private ImageView mBottomHomeImg;
+    private LinearLayout mBottomHomeImg;
     /**
      * 底部离开按钮
      */
-    private ImageView mBottomExitImg;
+    private LinearLayout mBottomExitImg;
     /**
      * 底部多窗口按钮
      */
-    private FrameLayout mBottomMultily;
+    private LinearLayout mBottomMultily;
     /**
      * 底部多窗口按钮显示数量的tv
      */
@@ -637,7 +639,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mProgressBar = findViewById(R.id.pbFloatSearchProgress);
         mBottomLayout = findViewById(R.id.home_bottom_layout);
         mBottomBackImg = findViewById(R.id.bottom_back_img);
+        mBottomBackLy = findViewById(R.id.bottom_back_layout);
         mBottomGoForwardImg = findViewById(R.id.bottom_forward_img);
+        mBottomGoForwardLy = findViewById(R.id.bottom_forward_layout);
         mBottomHomeImg = findViewById(R.id.bottom_home_img);
         mBottomExitImg = findViewById(R.id.bottom_exit_img);
         mBottomMultily = findViewById(R.id.bottom_multi_layout);
@@ -739,7 +743,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param backBtnVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
      */
     public void setBackBtnVisibility(int backBtnVisibility) {
-        mBottomBackImg.setVisibility(backBtnVisibility);
+        mBottomBackLy.setVisibility(backBtnVisibility);
     }
 
     /**
@@ -748,7 +752,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param goforwardBtnVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
      */
     public void setGoforwardBtnVisibility(int goforwardBtnVisibility) {
-        mBottomGoForwardImg.setVisibility(goforwardBtnVisibility);
+        mBottomGoForwardLy.setVisibility(goforwardBtnVisibility);
     }
 
     /**
