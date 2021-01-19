@@ -42,6 +42,7 @@ import com.snxun.browser.module.webview.tab.Tab;
 import com.snxun.browser.module.webview.tab.TabAdapter;
 import com.snxun.browser.util.AnkoKeyBoardKt;
 import com.snxun.browser.util.ViewUtils;
+import com.snxun.browser.widget.browser.listener.AddMultiWindowsBtnClickListener;
 import com.snxun.browser.widget.browser.listener.ExitBtnClickListener;
 import com.snxun.browser.widget.browser.listener.GoBackBtnClickListener;
 import com.snxun.browser.widget.browser.listener.GoForwardBtnClickListener;
@@ -166,6 +167,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * 底部多窗口监听器
      */
     private MultiWindowsBtnClickListener mMultiWindowsBtnClickListener;
+    /**
+     * 添加窗口监听器
+     */
+    private AddMultiWindowsBtnClickListener mAddMultiWindowsBtnClickListener;
     /**
      * 底部退出按钮监听器
      */
@@ -459,11 +464,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mBottomHomeImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchToMain();
-                mActiveTab.clearTabData();
-                mActiveTab.recreateWebView();
+//                switchToMain();
+//                mActiveTab.clearTabData();
+//                mActiveTab.recreateWebView();
                 mProgressBar.setVisibility(GONE);
-//                mTabController.recreateWebView(mActiveTab);
                 if (mHomeBtnClickListener != null)
                     mHomeBtnClickListener.onHomeBtnClick();
             }
@@ -475,6 +479,14 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 showTabs();
                 if (mMultiWindowsBtnClickListener != null)
                     mMultiWindowsBtnClickListener.onMultiWindowsBtnClick();
+            }
+        });
+        mAddMultiWindows.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAddMultiWindowsBtnClickListener != null) {
+                    mAddMultiWindowsBtnClickListener.onAddMultiWindowsBtnClick();
+                }
             }
         });
         //返回按钮设置监听
@@ -526,7 +538,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mAddMultiWindows.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTab(true);
+//                addTab(true);
             }
         });
         //关闭多窗口管理界面按钮设置监听
@@ -541,7 +553,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             @Override
             public void onClick(View v) {
                 mTabController.destroy();
-                addTab(true);
+//                addTab(true);
             }
         });
         //默认内容布局的按钮设置监听
@@ -844,6 +856,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     public void setMultiWindowsBtnClickListener(MultiWindowsBtnClickListener listener) {
         this.mMultiWindowsBtnClickListener = listener;
+    }
+
+    public void setAddMultiWindowsBtnClickListener(AddMultiWindowsBtnClickListener listener) {
+        this.mAddMultiWindowsBtnClickListener = listener;
     }
 
     /**
