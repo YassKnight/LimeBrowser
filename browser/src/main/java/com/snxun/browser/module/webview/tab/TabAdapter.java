@@ -101,7 +101,7 @@ public class TabAdapter extends StackAdapter<Tab> {
         public void onClick(View view) {
             if (view == content) {
                 if (mController != null) {
-                    mController.selectTab(tab);
+                    mController.selectTab(tab, true);
                 }
             } else if (view == ivClose) {
                 if (mController != null) {

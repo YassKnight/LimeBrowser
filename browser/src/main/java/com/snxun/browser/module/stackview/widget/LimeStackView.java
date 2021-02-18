@@ -345,9 +345,10 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
      *
      * @param index 页面的ID
      */
-    public void selectTab(int index, Runnable onComplete) {
+    public void selectTab(int index, Runnable onComplete, boolean isShowAnimating) {
         mSelectTab = index;
-        animateShow(mSelectTab, mPreviousView, mTargetView, false, onComplete);
+        if (isShowAnimating)
+            animateShow(mSelectTab, mPreviousView, mTargetView, false, onComplete);
     }
 
     /**
@@ -520,7 +521,7 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
         mMinScrollP = BASE_MIN_SCROLL_P - (getChildCount() - 2) * PROGRESS_STEP;
         mMaxScrollP = BASE_MAX_SCROLL_P;
         mMinPositiveScrollP = mMinScrollP + PROGRESS_STEP * 0.25f;
-        mMaxPositiveScrollP = mMaxScrollP - PROGRESS_STEP * 0.75f;
+        mMaxPositiveScrollP = mMaxScrollP - PROGRESS_STEP * 0.75f*1.5f;
     }
 
     /**
@@ -955,7 +956,7 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
 
     @Override
     public boolean canChildBeDismissed(View v) {
-        return true;
+        return false;
     }
 
     @Override

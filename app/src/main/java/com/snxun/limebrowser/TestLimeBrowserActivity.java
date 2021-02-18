@@ -7,6 +7,7 @@ import android.widget.Button;
 import com.lodz.android.corekt.utils.ToastUtils;
 import com.lodz.android.pandora.base.activity.AbsActivity;
 import com.snxun.browser.widget.browser.LimeBrowser;
+import com.snxun.browser.widget.browser.listener.AddMultiWindowsBtnClickListener;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -38,9 +39,6 @@ public class TestLimeBrowserActivity extends AbsActivity {
         //设置标题栏显隐 ,默认显示
         limeBrowser.setTitleLayoutVisibility(View.GONE);
 
-        //设置搜索栏显隐(如果搜索栏和标题栏同时设置显示，只显示搜索栏)
-        limeBrowser.setSearchBarLayoutVisibility(View.GONE);
-
         limeBrowser.setContentLayout(R.layout.layout_custom_content);
         mBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn);
         mtenxunBtn = (Button) limeBrowser.findContentLayoutChildViewById(R.id.mybtn_tenxun);
@@ -49,6 +47,7 @@ public class TestLimeBrowserActivity extends AbsActivity {
         //webview工厂建议最后一步设置
         limeBrowser.setWebViewFactory(new TestWebViewFactory());
 
+        limeBrowser.setLoadView(getResources().getDrawable(R.drawable.ic_background));
 
     }
 
@@ -64,6 +63,12 @@ public class TestLimeBrowserActivity extends AbsActivity {
         limeBrowser.setExitBtnClickListener(() -> ToastUtils.showShort(getContext(), "点击了离开按钮"));
 
         limeBrowser.setMultiWindowsBtnClickListener(() -> ToastUtils.showShort(getContext(), "点击了多窗口按钮"));
+        limeBrowser.setAddMultiWindowsBtnClickListener(new AddMultiWindowsBtnClickListener() {
+            @Override
+            public void onAddMultiWindowsBtnClick() {
+                limeBrowser.addTab(true);
+            }
+        });
 
 
         mBtn.setOnClickListener(v -> limeBrowser.load("https://www.baidu.com"));
