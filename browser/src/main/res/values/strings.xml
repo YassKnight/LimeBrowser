@@ -13,4 +13,7 @@
     <string name="browsing_history">浏览历史</string>
     <string name="bookmark">收藏书签</string>
     <string name="clear_browsing_history">清空浏览记录</string>
+    <string name="refresh">刷新</string>
+    <string name="network_error">网络异常，请重新加载</string>
+    <string name="vpn_error">vpn断开，请重新加载</string>
 </resources>

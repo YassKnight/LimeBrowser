@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/lime_main_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
@@ -42,6 +42,15 @@
     <!--        android:id="@+id/limeBrowser_searchbar_layout"-->
     <!--        layout="@layout/layout_searchbar"-->
     <!--        android:visibility="gone" />-->
+    <include
+        android:id="@+id/network_error_layout"
+        layout="@layout/layout_network_error"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/vpn_error_layout"
+        layout="@layout/layout_vpn_error"
+         />
 
     <ProgressBar
         android:id="@+id/pbFloatSearchProgress"

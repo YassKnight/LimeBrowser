@@ -91,6 +91,7 @@ public class Tab {
     private boolean mInForeground;
     private static Paint sAlphaPaint = new Paint();
     private Stack<String> mBrowsedHistory = new Stack<>();
+    private static int mNetType = 1;
 
     static {
         sAlphaPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -490,6 +491,14 @@ public class Tab {
         }
     }
 
+    public void setNetType(int netType) {
+        mNetType = netType;
+    }
+
+    public int getNetType() {
+        return mNetType;
+    }
+
     public void capture() {
         if (mMainView == null || mCapture == null) return;
         View view = !isBlank() ? mMainView : mWebViewController.getActivity().getWindow().getDecorView();
@@ -561,6 +570,7 @@ public class Tab {
         String mOriginalUrl;
         String mTitle;
         Bitmap mFavicon;
+
 
         PageState(Context context) {
             this(context, "", getDefaultFavicon(context));

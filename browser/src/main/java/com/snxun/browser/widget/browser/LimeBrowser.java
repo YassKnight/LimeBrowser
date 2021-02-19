@@ -54,6 +54,9 @@ import com.snxun.browser.widget.browser.listener.GoBackBtnClickListener;
 import com.snxun.browser.widget.browser.listener.GoForwardBtnClickListener;
 import com.snxun.browser.widget.browser.listener.HomeBtnClickListener;
 import com.snxun.browser.widget.browser.listener.MultiWindowsBtnClickListener;
+import com.snxun.browser.widget.browser.listener.NetworkReconnectBtnClickListener;
+import com.snxun.browser.widget.browser.listener.RefreshBtnClickListener;
+import com.snxun.browser.widget.browser.listener.VpnReconnectBtnClickListener;
 
 import java.io.Serializable;
 
@@ -81,6 +84,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
     private boolean mIsShowHomeBtn;
     private boolean mIsShowMultiWindowBtn;
     private boolean mIsShowExitBtn;
+    private boolean mIsShowRefreshBtn;
     /**
      * 顶部标题
      */
@@ -140,6 +144,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     private LinearLayout mBottomExitImg;
     /**
+     * 底部刷新按钮
+     */
+    private LinearLayout mBottomRefreshImg;
+    /**
      * 底部多窗口按钮
      */
     private LinearLayout mBottomMultily;
@@ -192,6 +200,18 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     private ExitBtnClickListener mExitBtnClickListener;
     /**
+     * 底部刷新按钮监听器
+     */
+    private RefreshBtnClickListener mRefreshBtnClickListener;
+    /**
+     * 网络重连按钮监听器
+     */
+    private NetworkReconnectBtnClickListener mNetworkReconnectBtnClickListener;
+    /**
+     * vpn重连按钮监听器
+     */
+    private VpnReconnectBtnClickListener mVpnReconnectBtnClickListener;
+    /**
      * 浏览器主页的内容布局
      */
     private LinearLayout mLimeBrowserHomeContentLayout;
@@ -243,6 +263,11 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
 
     private SimpleLoadingDialog mSimpleLoadingDialog;
     private LinearLayout mLoadingLayout;
+    private LinearLayout mNetworkErrorLayout;
+    private LinearLayout mVpnErrorLayout;
+    private Button mNetworkReconnectbtn;
+    private Button mVPNReconnectbtn;
+
     private FrameLayout mMainLayout;
     private Drawable mLoadViewRes;
 
@@ -278,6 +303,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mIsShowHomeBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showHomeBtn, true);
         mIsShowMultiWindowBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showMultiWindowBtn, true);
         mIsShowExitBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showExitBtn, true);
+        mIsShowExitBtn = typedArray.getBoolean(R.styleable.LimeBrowser_showRefreshBtn, true);
         typedArray.recycle();
     }
 
@@ -524,6 +550,14 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
 
             }
         });
+        //刷新按钮设置监听
+        mBottomRefreshImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mRefreshBtnClickListener != null)
+                    mRefreshBtnClickListener.onRefreshBtnClick();
+            }
+        });
         //添加窗口按钮设置监听
         mAddMultiWindows.setOnClickListener(new OnClickListener() {
             @Override
@@ -560,6 +594,21 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             }
         });
 
+        mNetworkReconnectbtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mNetworkReconnectBtnClickListener != null)
+                    mNetworkReconnectBtnClickListener.onNetworkReconnectBtnClick();
+            }
+        });
+
+        mVPNReconnectbtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mVpnReconnectBtnClickListener != null)
+                    mVpnReconnectBtnClickListener.onVpnReconnectBtnClick();
+            }
+        });
     }
 
     /**
@@ -598,6 +647,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         if (mIsShowExitBtn) setExitBtnVisibility(VISIBLE);
         else setExitBtnVisibility(GONE);
 
+        //设置刷新按钮显隐
+        if (mIsShowRefreshBtn) setRefreshBtnVisibility(VISIBLE);
+        else setRefreshBtnVisibility(GONE);
+
         //多窗口文本赋值,默认设置"1"
         setmBottomMultiText("1");
 
@@ -627,10 +680,15 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mBottomGoForwardLy = findViewById(R.id.bottom_forward_layout);
         mBottomHomeImg = findViewById(R.id.bottom_home_img);
         mBottomExitImg = findViewById(R.id.bottom_exit_img);
+        mBottomRefreshImg = findViewById(R.id.bottom_refresh_img);
         mBottomMultily = findViewById(R.id.bottom_multi_layout);
         mBottomMultiNumTv = findViewById(R.id.bottom_multi_tv);
         mLimeBrowserHomeContentLayout = findViewById(R.id.limeBrowser_content_layout);
         mLoadingLayout = findViewById(R.id.loading_layout);
+        mNetworkErrorLayout = findViewById(R.id.network_error_layout);
+        mVpnErrorLayout = findViewById(R.id.vpn_error_layout);
+        mNetworkReconnectbtn = findViewById(R.id.network_reconnect_btn);
+        mVPNReconnectbtn = findViewById(R.id.vpn_reconnect_btn);
         mStackView = findViewById(R.id.stack_view);
         mRootView = findViewById(R.id.root_view);
         mContentWrapper = findViewById(R.id.home_content_layout);
@@ -760,6 +818,37 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mBottomExitImg.setVisibility(exitBtnVisibility);
     }
 
+    /**
+     * 设置底部刷新按钮显隐
+     *
+     * @param refreshBtnVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
+     */
+    public void setRefreshBtnVisibility(int refreshBtnVisibility) {
+        mBottomRefreshImg.setVisibility(refreshBtnVisibility);
+    }
+
+    /**
+     * 设置网络连接错误页面显隐
+     *
+     * @param networkErrorLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
+     */
+    public void setNetworkErrorLayoutVisibility(int networkErrorLayoutVisibility) {
+        if (networkErrorLayoutVisibility == View.VISIBLE) {
+            mNetworkErrorLayout.bringToFront();
+        }
+        mNetworkErrorLayout.setVisibility(networkErrorLayoutVisibility);
+    }
+
+    /**
+     * 设置vpn连接错误页面显隐
+     *
+     * @param vpnErrorLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
+     */
+    public void setVpnErrorLayoutVisibility(int vpnErrorLayoutVisibility) {
+        if (vpnErrorLayoutVisibility == VISIBLE)
+            mVpnErrorLayout.bringToFront();
+        mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);
+    }
 
     /**
      * 设置底部主页按钮监听器
@@ -795,6 +884,33 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     public void setExitBtnClickListener(ExitBtnClickListener listener) {
         this.mExitBtnClickListener = listener;
+    }
+
+    /**
+     * 设置底部刷新按钮监听器
+     *
+     * @param listener 离开按钮的监听器
+     */
+    public void setRefresgBtnClickListener(RefreshBtnClickListener listener) {
+        this.mRefreshBtnClickListener = listener;
+    }
+
+    /**
+     * 设置网络重连按钮监听器
+     *
+     * @param listener
+     */
+    public void setNetworkReconnectBtnClickListener(NetworkReconnectBtnClickListener listener) {
+        this.mNetworkReconnectBtnClickListener = listener;
+    }
+
+    /**
+     * 设置vpn重连按钮监听器
+     *
+     * @param listener
+     */
+    public void setVpnReconnectBtnClickListener(VpnReconnectBtnClickListener listener) {
+        this.mVpnReconnectBtnClickListener = listener;
     }
 
     /**
@@ -871,6 +987,21 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         if (mActiveTab != null) {
             mActiveTab.clearWebHistory();
             mActiveTab.loadUrl(url, null, true);
+            switchToTab();
+        }
+    }
+
+    /**
+     * 如果要加载H5网页，请调用这个方法开启webview，加载网址
+     *
+     * @param url     需要加载的网页url
+     * @param netType 加载的网页的区类
+     */
+    public void load(String url, int netType) {
+        if (mActiveTab != null) {
+            mActiveTab.clearWebHistory();
+            mActiveTab.loadUrl(url, null, true);
+            mActiveTab.setNetType(netType);
             switchToTab();
         }
     }
@@ -1140,10 +1271,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mProgressBar.setVisibility(VISIBLE);
 
         //SimpleLoadingDialog
-        if (mSimpleLoadingDialog == null)
-            mSimpleLoadingDialog = new SimpleLoadingDialog(getContext());
-        //显示加载框
-        mSimpleLoadingDialog.showFirst("加载中.....");
+//        if (mSimpleLoadingDialog == null)
+//            mSimpleLoadingDialog = new SimpleLoadingDialog(getContext());
+//        //显示加载框
+//        mSimpleLoadingDialog.showFirst("加载中.....");
     }
 
     @Override

@@ -23,6 +23,8 @@
         <attr name="showMultiWindowBtn" format="boolean" />
         <!--        显示离开按钮-->
         <attr name="showExitBtn" format="boolean" />
+        <!--        显示刷新按钮-->
+        <attr name="showRefreshBtn" format="boolean" />
 
 
     </declare-styleable>

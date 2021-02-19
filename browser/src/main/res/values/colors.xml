@@ -23,7 +23,9 @@
     <color name="color_80C0C0C0">#80C0C0C0</color>
     <color name="color_807FFFD4">#807FFFD4</color>
     <color name="color_00ffffff">#00ffffff</color>
+    <color name="color_ffffffff">#ffffffff</color>
     <color name="color_2277ff">#2277ff</color>
     <color name="color_6b6b6b">#6b6b6b</color>
+    <color name="color_106dcd">#106dcd</color>
 
 </resources>

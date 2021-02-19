@@ -116,6 +116,22 @@
                 android:src="@drawable/ic_exit" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/bottom_refresh_img"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_48dp"
+                android:layout_height="@dimen/dimen_48dp"
+                android:layout_gravity="center"
+                android:padding="@dimen/dimen_14dp"
+                android:src="@drawable/ic_refresh" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </com.snxun.browser.module.bottomview.LimeBottomView>

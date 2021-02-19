@@ -8,6 +8,7 @@ import com.lodz.android.corekt.utils.ToastUtils;
 import com.lodz.android.pandora.base.activity.AbsActivity;
 import com.snxun.browser.widget.browser.LimeBrowser;
 import com.snxun.browser.widget.browser.listener.AddMultiWindowsBtnClickListener;
+import com.snxun.browser.widget.browser.listener.NetworkReconnectBtnClickListener;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -49,6 +50,9 @@ public class TestLimeBrowserActivity extends AbsActivity {
 
         limeBrowser.setLoadView(getResources().getDrawable(R.drawable.ic_background));
 
+        limeBrowser.setRefreshBtnVisibility(View.VISIBLE);
+
+
     }
 
 
@@ -60,7 +64,7 @@ public class TestLimeBrowserActivity extends AbsActivity {
 
         limeBrowser.setonGoForwardBtnClickListener(() -> ToastUtils.showShort(getContext(), "点击了前进按钮"));
 
-        limeBrowser.setExitBtnClickListener(() -> ToastUtils.showShort(getContext(), "点击了离开按钮"));
+        limeBrowser.setExitBtnClickListener(() -> limeBrowser.setNetworkErrorLayoutVisibility(View.VISIBLE));
 
         limeBrowser.setMultiWindowsBtnClickListener(() -> ToastUtils.showShort(getContext(), "点击了多窗口按钮"));
         limeBrowser.setAddMultiWindowsBtnClickListener(new AddMultiWindowsBtnClickListener() {
@@ -74,6 +78,14 @@ public class TestLimeBrowserActivity extends AbsActivity {
         mBtn.setOnClickListener(v -> limeBrowser.load("https://www.baidu.com"));
         mtenxunBtn.setOnClickListener(v -> limeBrowser.load("https://www.tencent.com/zh-cn"));
         mBiliBtn.setOnClickListener(v -> limeBrowser.load("https://www.bilibili.com/"));
+
+        limeBrowser.setNetworkReconnectBtnClickListener(new NetworkReconnectBtnClickListener() {
+            @Override
+            public void onNetworkReconnectBtnClick() {
+                limeBrowser.setNetworkErrorLayoutVisibility(View.GONE);
+                limeBrowser.getTabController().getCurrentTab().reloadPage();
+            }
+        });
 
 
     }
