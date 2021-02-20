@@ -50,7 +50,7 @@
     <include
         android:id="@+id/vpn_error_layout"
         layout="@layout/layout_vpn_error"
-         />
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/pbFloatSearchProgress"

@@ -44,6 +44,7 @@ import com.snxun.browser.module.webview.factory.LimeWebWebViewFactory;
 import com.snxun.browser.module.webview.factory.WebViewFactory;
 import com.snxun.browser.module.webview.tab.Tab;
 import com.snxun.browser.module.webview.tab.TabAdapter;
+import com.snxun.browser.util.RxUtils;
 import com.snxun.browser.util.UiHandler;
 import com.snxun.browser.util.ViewUtils;
 import com.snxun.browser.widget.browser.listener.AddMultiWindowsBtnClickListener;
@@ -59,6 +60,10 @@ import com.snxun.browser.widget.browser.listener.RefreshBtnClickListener;
 import com.snxun.browser.widget.browser.listener.VpnReconnectBtnClickListener;
 
 import java.io.Serializable;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * 对外提供的浏览器控件
@@ -488,9 +493,14 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         //移除窗口监听
         mStackView.setOnChildDismissedListener(this);
         //主页按钮设置监听
-        mBottomHomeImg.setOnClickListener(new OnClickListener() {
+        RxUtils.viewClick(mBottomHomeImg).subscribe(new Observer<View>() {
             @Override
-            public void onClick(View v) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
 //                switchToMain();
 //                mActiveTab.clearTabData();
 //                mActiveTab.recreateWebView();
@@ -498,16 +508,42 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 if (mHomeBtnClickListener != null)
                     mHomeBtnClickListener.onHomeBtnClick();
             }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
         //多窗口按钮设置监听
-        mBottomMultily.setOnClickListener(new OnClickListener() {
+        RxUtils.viewClick(mBottomMultily).subscribe(new Observer<View>() {
             @Override
-            public void onClick(View v) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
                 showTabs(false, false, 0);
                 if (mMultiWindowsBtnClickListener != null)
                     mMultiWindowsBtnClickListener.onMultiWindowsBtnClick();
             }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
         //返回按钮设置监听
         mBottomBackImg.setOnClickListener(new OnClickListener() {
             @Override
@@ -540,31 +576,76 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             }
         });
         //退出按钮设置监听
-        mBottomExitImg.setOnClickListener(new OnClickListener() {
+        RxUtils.viewClick(mBottomExitImg).subscribe(new Observer<View>() {
             @Override
-            public void onClick(View v) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
                 new ExitDialog(getContext()).show();
 
                 if (mExitBtnClickListener != null)
                     mExitBtnClickListener.onExitBtnClickListener();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
 
             }
         });
+
         //刷新按钮设置监听
-        mBottomRefreshImg.setOnClickListener(new OnClickListener() {
+        RxUtils.viewClick(mBottomRefreshImg).subscribe(new Observer<View>() {
             @Override
-            public void onClick(View v) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
                 if (mRefreshBtnClickListener != null)
                     mRefreshBtnClickListener.onRefreshBtnClick();
             }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
         //添加窗口按钮设置监听
-        mAddMultiWindows.setOnClickListener(new OnClickListener() {
+        RxUtils.viewClick(mAddMultiWindows).subscribe(new Observer<View>() {
             @Override
-            public void onClick(View v) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
 //                addTab(true);
                 if (mAddMultiWindowsBtnClickListener != null)
                     mAddMultiWindowsBtnClickListener.onAddMultiWindowsBtnClick();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
         //关闭多窗口管理界面按钮设置监听
@@ -577,13 +658,28 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             }
         });
         //清空所有多窗口按钮设置监听
-        mClearMultiWindosw.setOnClickListener(new OnClickListener() {
+        RxUtils.viewClick(mClearMultiWindosw).subscribe(new Observer<View>() {
             @Override
-            public void onClick(View v) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
                 mTabController.destroy();
                 if (mClearMultiWindoswListener != null)
                     mClearMultiWindoswListener.onClearMultiWindoswBtnClick();
 //                addTab(true);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
         //默认内容布局的按钮设置监听
@@ -593,22 +689,51 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 load("https://github.com/YassKnight/LimeBrowser");
             }
         });
-
-        mNetworkReconnectbtn.setOnClickListener(new OnClickListener() {
+        RxUtils.viewClick(mNetworkReconnectbtn).subscribe(new Observer<View>() {
             @Override
-            public void onClick(View v) {
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
                 if (mNetworkReconnectBtnClickListener != null)
                     mNetworkReconnectBtnClickListener.onNetworkReconnectBtnClick();
             }
-        });
 
-        mVPNReconnectbtn.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+        RxUtils.viewClick(mVPNReconnectbtn).subscribe(new Observer<View>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull View view) {
                 if (mVpnReconnectBtnClickListener != null)
                     mVpnReconnectBtnClickListener.onVpnReconnectBtnClick();
             }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
         });
+
     }
 
     /**
@@ -833,6 +958,11 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param networkErrorLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
      */
     public void setNetworkErrorLayoutVisibility(int networkErrorLayoutVisibility) {
+        //如果页面管理界面显示，就不在显示错误界面
+        if (mPagersManagelayout.getVisibility()==VISIBLE) {
+            mNetworkErrorLayout.setVisibility(GONE);
+            return;
+        }
         if (networkErrorLayoutVisibility == View.VISIBLE) {
             mNetworkErrorLayout.bringToFront();
         }
@@ -845,6 +975,11 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param vpnErrorLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
      */
     public void setVpnErrorLayoutVisibility(int vpnErrorLayoutVisibility) {
+        //如果页面管理界面显示，就不在显示错误界面
+        if (mPagersManagelayout.getVisibility()==VISIBLE) {
+            mVpnErrorLayout.setVisibility(GONE);
+            return;
+        }
         if (vpnErrorLayoutVisibility == VISIBLE)
             mVpnErrorLayout.bringToFront();
         mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);

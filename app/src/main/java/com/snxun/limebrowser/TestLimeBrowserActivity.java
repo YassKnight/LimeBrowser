@@ -1,6 +1,7 @@
 package com.snxun.limebrowser;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -9,6 +10,7 @@ import com.lodz.android.pandora.base.activity.AbsActivity;
 import com.snxun.browser.widget.browser.LimeBrowser;
 import com.snxun.browser.widget.browser.listener.AddMultiWindowsBtnClickListener;
 import com.snxun.browser.widget.browser.listener.NetworkReconnectBtnClickListener;
+import com.snxun.browser.widget.browser.listener.RefreshBtnClickListener;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -74,7 +76,6 @@ public class TestLimeBrowserActivity extends AbsActivity {
             }
         });
 
-
         mBtn.setOnClickListener(v -> limeBrowser.load("https://www.baidu.com"));
         mtenxunBtn.setOnClickListener(v -> limeBrowser.load("https://www.tencent.com/zh-cn"));
         mBiliBtn.setOnClickListener(v -> limeBrowser.load("https://www.bilibili.com/"));
@@ -87,6 +88,13 @@ public class TestLimeBrowserActivity extends AbsActivity {
             }
         });
 
+        limeBrowser.setRefresgBtnClickListener(new RefreshBtnClickListener() {
+            @Override
+            public void onRefreshBtnClick() {
+                ToastUtils.showShort(getContext(), "点击了刷新按钮");
+                Log.e("onRefreshBtnClick", "onRefreshBtnClick: 点击了刷新按钮" );
+            }
+        });
 
     }
 

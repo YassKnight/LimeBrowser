@@ -91,7 +91,7 @@ public class Tab {
     private boolean mInForeground;
     private static Paint sAlphaPaint = new Paint();
     private Stack<String> mBrowsedHistory = new Stack<>();
-    private static int mNetType = 1;
+    private int mNetType = 1;
 
     static {
         sAlphaPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
