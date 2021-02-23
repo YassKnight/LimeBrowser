@@ -58,6 +58,7 @@ import com.snxun.browser.widget.browser.listener.HomeBtnClickListener;
 import com.snxun.browser.widget.browser.listener.MultiWindowsBtnClickListener;
 import com.snxun.browser.widget.browser.listener.NetworkReconnectBtnClickListener;
 import com.snxun.browser.widget.browser.listener.RefreshBtnClickListener;
+import com.snxun.browser.widget.browser.listener.TabSelectListener;
 import com.snxun.browser.widget.browser.listener.VpnReconnectBtnClickListener;
 
 import java.io.Serializable;
@@ -209,6 +210,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * 底部刷新按钮监听器
      */
     private RefreshBtnClickListener mRefreshBtnClickListener;
+    /**
+     * 窗口选择监听器
+     */
+    private TabSelectListener mTabSelectListener;
     /**
      * 网络重连按钮监听器
      */
@@ -960,10 +965,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     public void setNetworkErrorLayoutVisibility(int networkErrorLayoutVisibility) {
         //如果页面管理界面显示，就不在显示错误界面
-        if (mPagersManagelayout.getVisibility() == VISIBLE) {
-            mNetworkErrorLayout.setVisibility(GONE);
-            return;
-        }
+//        if (mPagersManagelayout.getVisibility() == VISIBLE) {
+//            mNetworkErrorLayout.setVisibility(GONE);
+//            return;
+//        }
         if (networkErrorLayoutVisibility == View.VISIBLE) {
             mNetworkErrorLayout.bringToFront();
             if (mNetworkErrorLayout.getVisibility() == GONE)
@@ -983,10 +988,10 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
     public void setVpnErrorLayoutVisibility(int vpnErrorLayoutVisibility) {
 
         //如果页面管理界面显示，就不在显示错误界面
-        if (mPagersManagelayout.getVisibility() == VISIBLE) {
-            mVpnErrorLayout.setVisibility(GONE);
-            return;
-        }
+//        if (mPagersManagelayout.getVisibility() == VISIBLE) {
+//            mVpnErrorLayout.setVisibility(GONE);
+//            return;
+//        }
         if (vpnErrorLayoutVisibility == VISIBLE) {
             mVpnErrorLayout.bringToFront();
             if (mVpnErrorLayout.getVisibility() == GONE)
@@ -1351,6 +1356,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         }
         animateShowFromAlpha(mPagersManagelayout.findViewById(R.id.bottomBar),
                 false, true, 300, 30, null);
+        mTabSelectListener.onTabSelect(tab.getNetType());
 
 //        UiHandler.postDelayed(new Runnable() {
 //            @Override
@@ -1383,6 +1389,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
 
     }
 
+    public void setTabSelectListener(TabSelectListener listener) {
+        this.mTabSelectListener = listener;
+    }
 
     public void setLoadView(Drawable loadView) {
         this.mLoadViewRes = loadView;
