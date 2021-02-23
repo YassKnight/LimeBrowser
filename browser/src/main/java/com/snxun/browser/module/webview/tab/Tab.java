@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -122,6 +123,10 @@ public class Tab {
         mContext = mWebViewController.getContext();
         mCurrentState = new PageState(mContext);
         mInPageLoad = false;
+        Rect outRect1 = new Rect();
+//        mWebViewController.getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect1);
+//        mCaptureWidth = outRect1.width();
+//        mCaptureHeight = outRect1.height();
         mCaptureWidth = ViewUtils.getScreenSize(mContext).x;
         mCaptureHeight = ViewUtils.getScreenSize(mContext).y;
         updateShouldCaptureThumbnails();
@@ -142,6 +147,7 @@ public class Tab {
         };
         mBrowsedHistory.push(DEFAULT_BLANK_URL);
     }
+
 
     private void restoreState(Bundle state) {
         mSavedState = state;
@@ -501,13 +507,15 @@ public class Tab {
 
     public void capture() {
         if (mMainView == null || mCapture == null) return;
-        View view = !isBlank() ? mMainView : mWebViewController.getActivity().getWindow().getDecorView();
+        View view = mWebViewController.getActivity().getWindow().getDecorView();
+//        View view = !isBlank() ? mMainView : mWebViewController.getActivity().getWindow().getDecorView();
         mCapture = Bitmap.createScaledBitmap(mCapture, mCaptureWidth, mCaptureHeight, true);
+//        mCapture = Bitmap.createBitmap(mCapture);
         Canvas c = new Canvas(mCapture);
         int state = c.save();
-        if (!isBlank()) {
-            c.translate(0, mContext.getResources().getDimensionPixelSize(R.dimen.dimen_48dp));
-        }
+//        if (!isBlank()) {
+//            c.translate(0, mContext.getResources().getDimensionPixelSize(R.dimen.dimen_48dp));
+//        }
         view.draw(c);
         c.restoreToCount(state);
         c.setBitmap(null);

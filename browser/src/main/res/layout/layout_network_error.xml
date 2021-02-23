@@ -5,6 +5,7 @@
     android:layout_marginBottom="@dimen/dimen_48dp"
     android:background="@color/white"
     android:gravity="center"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <ImageView

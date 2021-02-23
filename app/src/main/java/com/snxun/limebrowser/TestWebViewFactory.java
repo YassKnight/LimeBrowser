@@ -22,7 +22,7 @@ public class TestWebViewFactory implements WebViewFactory {
 
     @Override
     public WebView createWebView(Context context) {
-        WebView w = new WebView(context, null, android.R.attr.webViewStyle);
+        CustomWebView w = new CustomWebView(context, null, android.R.attr.webViewStyle);
         initWebSetting(w, context);
         return w;
     }
@@ -67,6 +67,7 @@ public class TestWebViewFactory implements WebViewFactory {
         webSettings.setJavaScriptEnabled(true);
         //设置渲染的优先级
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+
 
         String cacheDirPath = mContext.getFilesDir().getAbsolutePath() + "cache";
         //设置  Application Caches 缓存目录

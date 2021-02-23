@@ -9,7 +9,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
@@ -19,6 +18,8 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -959,12 +960,17 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     public void setNetworkErrorLayoutVisibility(int networkErrorLayoutVisibility) {
         //如果页面管理界面显示，就不在显示错误界面
-        if (mPagersManagelayout.getVisibility()==VISIBLE) {
+        if (mPagersManagelayout.getVisibility() == VISIBLE) {
             mNetworkErrorLayout.setVisibility(GONE);
             return;
         }
         if (networkErrorLayoutVisibility == View.VISIBLE) {
             mNetworkErrorLayout.bringToFront();
+            if (mNetworkErrorLayout.getVisibility() == GONE)
+                setShowAnimation(mNetworkErrorLayout);
+        } else {
+            if (mNetworkErrorLayout.getVisibility() == VISIBLE)
+                setHideAnimation(mNetworkErrorLayout);
         }
         mNetworkErrorLayout.setVisibility(networkErrorLayoutVisibility);
     }
@@ -975,14 +981,50 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param vpnErrorLayoutVisibility One of {@link #VISIBLE}, {@link #INVISIBLE}, or {@link #GONE}.
      */
     public void setVpnErrorLayoutVisibility(int vpnErrorLayoutVisibility) {
+
         //如果页面管理界面显示，就不在显示错误界面
-        if (mPagersManagelayout.getVisibility()==VISIBLE) {
+        if (mPagersManagelayout.getVisibility() == VISIBLE) {
             mVpnErrorLayout.setVisibility(GONE);
             return;
         }
-        if (vpnErrorLayoutVisibility == VISIBLE)
+        if (vpnErrorLayoutVisibility == VISIBLE) {
             mVpnErrorLayout.bringToFront();
+            if (mVpnErrorLayout.getVisibility() == GONE)
+                setShowAnimation(mVpnErrorLayout);
+        } else {
+            //如果当前vpn连接错误界面显示，再添加动画，避免无效动画
+            if (mVpnErrorLayout.getVisibility() == VISIBLE)
+                setHideAnimation(mVpnErrorLayout);
+        }
         mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);
+    }
+
+    /**
+     * 设置显示动画
+     *
+     * @param view
+     */
+    public void setShowAnimation(View view) {
+        TranslateAnimation showAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f);
+        showAnim.setDuration(500);
+        view.startAnimation(showAnim);
+    }
+
+    /**
+     * 设置隐藏动画
+     *
+     * @param view
+     */
+    public void setHideAnimation(View view) {
+        TranslateAnimation hideAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 1.0f);
+        hideAnim.setDuration(500);
+        view.startAnimation(hideAnim);
     }
 
     /**
@@ -1148,6 +1190,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         if (isAnimating()) {
             return;
         }
+        for (int i = 0; i < mTabController.getTabCount(); i++) {
+            mTabController.getTab(i).getWebView().setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         mActiveTab.capture();
         mTabAdapter.updateData(mTabController.getTabs());
         UiHandler.postDelayed(new Runnable() {
@@ -1186,6 +1231,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                         true, true, 300, 40, null);
             }
         }, isNeedDelay ? delay : 0);
+
 
     }
 
@@ -1254,6 +1300,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             mContentWrapper.removeView(mRootView);
         }
         WebView view = mActiveTab.getWebView();
+
         FrameLayout.LayoutParams lp;
         if (view != null && view.getParent() == null) {
             lp = (FrameLayout.LayoutParams) view.getLayoutParams();
@@ -1263,13 +1310,16 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                         ViewGroup.LayoutParams.MATCH_PARENT);
             }
             lp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dimen_48dp);
+
             mContentWrapper.addView(view, lp);
             mBottomLayout.bringToFront();
         }
+
         mIsInMain = false;
         mBottomHomeImg.setClickable(true);
         setBackBtnClickable(mActiveTab.getWebView().canGoBack());
         setForwardBtnClickable(mActiveTab.getWebView().canGoForward());
+
     }
 
 
@@ -1301,25 +1351,35 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         }
         animateShowFromAlpha(mPagersManagelayout.findViewById(R.id.bottomBar),
                 false, true, 300, 30, null);
-        UiHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mLoadingLayout.setBackground(mLoadViewRes != null ? mLoadViewRes : new BitmapDrawable(getScreenBitmapFromSystem()));
-                //SimpleLoadingDialog
-                mSimpleLoadingDialog = new SimpleLoadingDialog(getContext());
-                //显示加载框
-                mSimpleLoadingDialog.showFirst("加载中.....");
-                mLoadingLayout.setVisibility(VISIBLE);
-                mLoadingLayout.bringToFront();
-            }
-        }, mLoadViewRes != null ? 0 : 360);
-        UiHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mLoadingLayout.setVisibility(GONE);
-                mSimpleLoadingDialog.dismiss();
-            }
-        }, 2000);
+
+//        UiHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                for (int i = 0; i < mTabController.getTabCount(); i++) {
+//                    mTabController.getTab(i).getWebView().setLayerType(View.LAYER_TYPE_HARDWARE, null);
+//                }
+//            }
+//        }, 2000);
+
+//        UiHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mLoadingLayout.setBackground(mLoadViewRes != null ? mLoadViewRes : new BitmapDrawable(getScreenBitmapFromSystem()));
+//                //SimpleLoadingDialog
+//                mSimpleLoadingDialog = new SimpleLoadingDialog(getContext());
+//                //显示加载框
+//                mSimpleLoadingDialog.showFirst("加载中.....");
+//                mLoadingLayout.setVisibility(VISIBLE);
+//                mLoadingLayout.bringToFront();
+//            }
+//        }, mLoadViewRes != null ? 0 : 360);
+//        UiHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mLoadingLayout.setVisibility(GONE);
+//                mSimpleLoadingDialog.dismiss();
+//            }
+//        }, 2000);
 
     }
 
