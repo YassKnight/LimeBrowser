@@ -24,6 +24,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_nor_ffffff_press_gray"
             android:gravity="center"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <ImageView
@@ -40,6 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:clickable="true"
             android:background="@drawable/selector_nor_ffffff_press_gray"
             android:gravity="center"
             android:orientation="horizontal">
@@ -91,7 +93,7 @@
                     android:layout_height="@dimen/dimen_48dp"
                     android:layout_gravity="center"
                     android:padding="@dimen/dimen_14dp"
-                    android:src="@drawable/ic_window" />
+                    android:src="@drawable/select_tab" />
 
                 <TextView
                     android:id="@+id/bottom_multi_tv"

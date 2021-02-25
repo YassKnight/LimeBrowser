@@ -128,7 +128,7 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
         mViewMaxTop = mScreenHeight;
         mViewMinScale = DEFAULT_VIEW_MIN_SCALE;
         mViewMaxScale = DEFAULT_VIEW_MAX_SCALE;
-        mDuration = 500;
+        mDuration = 600;
         float densityScale = resources.getDisplayMetrics().density;
         // 初始化 SwipeHelper 检测方向 X
         mSwipeHelper = new SwipeHelper(mContext, SwipeHelper.X, this, densityScale, mTouchSlop);
@@ -280,7 +280,7 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
         if (index == 0)
             view.setTranslationY(transY);
         else
-            view.setTranslationY(transY * 3);
+            view.setTranslationY(transY * 2.5f);
     }
 
     // 更新view的z
@@ -521,7 +521,7 @@ public class LimeStackView extends FrameLayout implements SwipeHelper.Callback {
         mMinScrollP = BASE_MIN_SCROLL_P - (getChildCount() - 2) * PROGRESS_STEP;
         mMaxScrollP = BASE_MAX_SCROLL_P;
         mMinPositiveScrollP = mMinScrollP + PROGRESS_STEP * 0.25f;
-        mMaxPositiveScrollP = mMaxScrollP - PROGRESS_STEP * 0.75f*1.5f;
+        mMaxPositiveScrollP = mMaxScrollP - PROGRESS_STEP * 0.75f * 1.5f;
     }
 
     /**

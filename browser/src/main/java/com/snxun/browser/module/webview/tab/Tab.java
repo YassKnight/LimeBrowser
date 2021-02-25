@@ -93,6 +93,8 @@ public class Tab {
     private static Paint sAlphaPaint = new Paint();
     private Stack<String> mBrowsedHistory = new Stack<>();
     private int mNetType = 1;
+    private int mNetworkConnectErrorVisibility = View.GONE;
+    private int mVpnConnectErrorVisibility = View.GONE;
 
     static {
         sAlphaPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -503,6 +505,22 @@ public class Tab {
 
     public int getNetType() {
         return mNetType;
+    }
+
+    public void setNetworkConnectErrorVisibility(int visibility) {
+        mNetworkConnectErrorVisibility = visibility;
+    }
+
+    public int getNetworkConnectErrorVisibility() {
+        return mNetworkConnectErrorVisibility;
+    }
+
+    public void setVpnConnectErrorVisibility(int visibility) {
+        mVpnConnectErrorVisibility = visibility;
+    }
+
+    public int getVpnConnectErrorVisibility() {
+        return mVpnConnectErrorVisibility;
     }
 
     public void capture() {

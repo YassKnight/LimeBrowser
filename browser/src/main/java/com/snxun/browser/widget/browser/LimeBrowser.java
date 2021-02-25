@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -445,7 +446,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param clickable true：可以点击，false：不可点击
      */
     private void setBackBtnClickable(boolean clickable) {
-        mBottomBackImg.setClickable(clickable);
+        mBottomBackLy.setClickable(clickable);
         if (clickable)
             mBottomBackImg.setImageResource(R.drawable.ic_back);
         else
@@ -458,7 +459,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      * @param clickable true：可以点击，false：不可点击
      */
     private void setForwardBtnClickable(boolean clickable) {
-        mBottomGoForwardImg.setClickable(clickable);
+        mBottomGoForwardLy.setClickable(clickable);
         if (clickable)
             mBottomGoForwardImg.setImageResource(R.drawable.ic_forward);
         else
@@ -551,7 +552,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         });
 
         //返回按钮设置监听
-        mBottomBackImg.setOnClickListener(new OnClickListener() {
+        mBottomBackLy.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mActiveTab != null) {
@@ -568,7 +569,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             }
         });
         //前进按钮设置监听
-        mBottomGoForwardImg.setOnClickListener(new OnClickListener() {
+        mBottomGoForwardLy.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mActiveTab != null) {
@@ -606,7 +607,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
 
             }
         });
-
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_rotate);
+        anim.setFillAfter(true);//设置旋转后停止
         //刷新按钮设置监听
         RxUtils.viewClick(mBottomRefreshImg).subscribe(new Observer<View>() {
             @Override
@@ -616,6 +618,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
 
             @Override
             public void onNext(@NonNull View view) {
+                mBottomRefreshImg.startAnimation(anim);
                 if (mRefreshBtnClickListener != null)
                     mRefreshBtnClickListener.onRefreshBtnClick();
             }
@@ -978,6 +981,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 setHideAnimation(mNetworkErrorLayout);
         }
         mNetworkErrorLayout.setVisibility(networkErrorLayoutVisibility);
+        for (Tab tab : mTabController.getTabs()) {
+            tab.setNetworkConnectErrorVisibility(networkErrorLayoutVisibility);
+        }
     }
 
     /**
@@ -1002,6 +1008,13 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 setHideAnimation(mVpnErrorLayout);
         }
         mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);
+
+        for (Tab tab : mTabController.getTabs()) {
+            //三类区应用
+            if (tab.getNetType() == 3) {
+                tab.setVpnConnectErrorVisibility(vpnErrorLayoutVisibility);
+            }
+        }
     }
 
     /**
@@ -1317,7 +1330,14 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             lp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.dimen_48dp);
 
             mContentWrapper.addView(view, lp);
+            mContentWrapper.bringToFront();
             mBottomLayout.bringToFront();
+
+            if (mActiveTab.getVpnConnectErrorVisibility() == VISIBLE)
+                mVpnErrorLayout.bringToFront();
+            if (mActiveTab.getNetworkConnectErrorVisibility() == VISIBLE)
+                mNetworkErrorLayout.bringToFront();
+
         }
 
         mIsInMain = false;
@@ -1356,7 +1376,8 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         }
         animateShowFromAlpha(mPagersManagelayout.findViewById(R.id.bottomBar),
                 false, true, 300, 30, null);
-        mTabSelectListener.onTabSelect(tab.getNetType());
+        if (mTabSelectListener != null)
+            mTabSelectListener.onTabSelect(tab.getNetType());
 
 //        UiHandler.postDelayed(new Runnable() {
 //            @Override
