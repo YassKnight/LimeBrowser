@@ -895,6 +895,32 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mPagersManagelayout.setVisibility(pagersManagelayoutVisibility);
     }
 
+    /**
+     * 获取窗口管理界面显隐
+     *
+     * @return
+     */
+    public int getPagersManagelayoutVisibility() {
+        return mPagersManagelayout.getVisibility();
+    }
+
+    /**
+     * 获取内容页面显隐
+     *
+     * @return
+     */
+    public int getContentWrapperLayoutVisibility() {
+        return mContentWrapper.getVisibility();
+    }
+
+    /**
+     * 获取是否在主页
+     *
+     * @return
+     */
+    public boolean isMain() {
+        return mIsInMain;
+    }
 
     /**
      * 设置底部栏显隐
@@ -1016,6 +1042,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             }
         }
     }
+
 
     /**
      * 设置显示动画
