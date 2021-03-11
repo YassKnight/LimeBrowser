@@ -1532,7 +1532,9 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
     @Override
     public void onPageFinished(Tab tab) {
         mProgressBar.setVisibility(INVISIBLE);
-        tab.shouldUpdateThumbnail(true);
+        if (mPagersManagelayout.getVisibility()==GONE){
+            tab.shouldUpdateThumbnail(true);
+        }
         mTabAdapter.notifyDataSetChanged();
         setBackBtnClickable(mActiveTab.getWebView().canGoBack());
         setForwardBtnClickable(mActiveTab.getWebView().canGoForward());
