@@ -1026,19 +1026,26 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
 //        }
         if (vpnErrorLayoutVisibility == VISIBLE) {
             mVpnErrorLayout.bringToFront();
-            if (mVpnErrorLayout.getVisibility() == GONE)
+            if (mVpnErrorLayout.getVisibility() == GONE) {
                 setShowAnimation(mVpnErrorLayout);
+            }
+            if (mTabController.getCurrentTab().getNetType()==3){
+                mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);
+            }
         } else {
             //如果当前vpn连接错误界面显示，再添加动画，避免无效动画
-            if (mVpnErrorLayout.getVisibility() == VISIBLE)
+            if (mVpnErrorLayout.getVisibility() == VISIBLE) {
                 setHideAnimation(mVpnErrorLayout);
+            }
+            mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);
         }
-        mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);
 
         for (Tab tab : mTabController.getTabs()) {
             //三类区应用
             if (tab.getNetType() == 3) {
                 tab.setVpnConnectErrorVisibility(vpnErrorLayoutVisibility);
+            }else {
+                tab.setVpnConnectErrorVisibility(GONE);
             }
         }
     }
