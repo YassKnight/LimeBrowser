@@ -23,9 +23,18 @@
 Gradle
 
 ```
+//Jcenter library (since jcenter library is officially deprecated, it is recommended to use maven library)
 dependencies{
     //e.g. 'com.snxun:browser:1.0.5'
   implementation 'com.snxun:browser:${LATEST_VERSION}'
+}
+```
+
+```
+//Maven library (recommended)
+dependencies{
+    //e.g. 'com.github.YassKnight:browser:3.0.1'
+  implementation 'com.github.YassKnight:browser:${LATEST_VERSION}'
 }
 ```
 

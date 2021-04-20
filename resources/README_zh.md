@@ -20,9 +20,18 @@
 Gradle
 
 ```
+jcenter库(由于jcenter库官方弃用,建议使用maven库)
 dependencies{
     //e.g. 'com.snxun:browser:1.0.5'
   implementation 'com.snxun:browser:${LATEST_VERSION}'
+}
+```
+
+```
+maven库(建议使用)
+dependencies{
+    //e.g. 'com.github.YassKnight:browser:3.0.1'
+  implementation 'com.github.YassKnight:browser:${LATEST_VERSION}'
 }
 ```
 
