@@ -15,9 +15,9 @@ apply plugin: 'kotlin-android'
 //    website = 'https://github.com/YassKnight/LimeBrowser' //开源网址
 //}
 ext {
-//    PUBLISH_GROUP_ID = "com.favext"        //项目包名
+    PUBLISH_GROUP_ID = "com.github.YassKnight"        //项目包名
     PUBLISH_ARTIFACT_ID = 'browser'            //项目名
-//    PUBLISH_VERSION = "3.0.0"                    //版本号
+    PUBLISH_VERSION = "3.0.1"                    //版本号
 }
 apply from: "${rootProject.projectDir}/publish-mavencentral.gradle"
 
@@ -30,7 +30,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 3
-        versionName "3.0.0"
+        versionName "3.0.1"
 
     }
 
@@ -56,9 +56,6 @@ dependencies {
     //cardview使用
     api 'com.google.android.material:material:1.2.1'
     api 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
-    //加载动画
-    api 'com.github.LinweiJ.LoadingDialog:loadingDialog:0.2.0'
-
 
 }
 repositories {

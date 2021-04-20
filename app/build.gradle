@@ -59,11 +59,10 @@ android {
 }
 
 dependencies {
-
-    //引入青柠浏览器库
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    //引入青柠浏览器组件
     implementation project(':browser')
 
-    //组件库
-    implementation 'com.lodz:pandora:1.5.0'
-//    implementation 'cn.lodz:Component:2.1.7'
 }

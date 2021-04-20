@@ -8,10 +8,10 @@ task androidSourcesJar(type: Jar) {
     exclude "**/R.class"
     exclude "**/BuildConfig.class"
 }
-ext {
-    PUBLISH_GROUP_ID = 'com.favext'
-    PUBLISH_VERSION = '3.0.0'
-}
+//ext {
+//    PUBLISH_GROUP_ID = 'com.favext'
+//    PUBLISH_VERSION = '3.0.0'
+//}
 
 ext["signing.keyId"] = ''
 ext["signing.password"] = ''
@@ -93,8 +93,8 @@ publishing {
             // any other name that's descriptive for you
             name = "LimeBrowser"
 
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/content/repositories/releases/"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
             // You only need this if you want to publish snapshots, otherwise just set the URL
             // to the release repo directly
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl

@@ -33,7 +33,6 @@ import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.fragment.app.FragmentActivity;
 
-import com.lwj.widget.loadingdialog.SimpleLoadingDialog;
 import com.snxun.browser.R;
 import com.snxun.browser.controller.TabController;
 import com.snxun.browser.controller.UiController;
@@ -46,6 +45,7 @@ import com.snxun.browser.module.webview.factory.LimeWebWebViewFactory;
 import com.snxun.browser.module.webview.factory.WebViewFactory;
 import com.snxun.browser.module.webview.tab.Tab;
 import com.snxun.browser.module.webview.tab.TabAdapter;
+import com.snxun.browser.util.DialogUtils;
 import com.snxun.browser.util.RxUtils;
 import com.snxun.browser.util.UiHandler;
 import com.snxun.browser.util.ViewUtils;
@@ -273,7 +273,6 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
      */
     private boolean mIsInMain = true;
 
-    private SimpleLoadingDialog mSimpleLoadingDialog;
     private LinearLayout mLoadingLayout;
     private LinearLayout mNetworkErrorLayout;
     private LinearLayout mVpnErrorLayout;
@@ -1029,7 +1028,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             if (mVpnErrorLayout.getVisibility() == GONE) {
                 setShowAnimation(mVpnErrorLayout);
             }
-            if (mTabController.getCurrentTab().getNetType()==3){
+            if (mTabController.getCurrentTab().getNetType() == 3) {
                 mVpnErrorLayout.setVisibility(vpnErrorLayoutVisibility);
             }
         } else {
@@ -1044,7 +1043,7 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             //三类区应用
             if (tab.getNetType() == 3) {
                 tab.setVpnConnectErrorVisibility(vpnErrorLayoutVisibility);
-            }else {
+            } else {
                 tab.setVpnConnectErrorVisibility(GONE);
             }
         }
@@ -1251,14 +1250,11 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
             @Override
             public void run() {
                 if (isShowLoading) {
-                    //SimpleLoadingDialog
-                    mSimpleLoadingDialog = new SimpleLoadingDialog(getContext());
-                    //显示加载框
-                    mSimpleLoadingDialog.showFirst("加载中.....");
+                    DialogUtils.showLoadingDialog(mContext);
                     UiHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mSimpleLoadingDialog.dismiss();
+                            DialogUtils.dismissLoadingDialog(mContext);
                         }
                     }, 1000);
                 }
@@ -1412,36 +1408,6 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
                 false, true, 300, 30, null);
         if (mTabSelectListener != null)
             mTabSelectListener.onTabSelect(tab.getNetType());
-
-//        UiHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                for (int i = 0; i < mTabController.getTabCount(); i++) {
-//                    mTabController.getTab(i).getWebView().setLayerType(View.LAYER_TYPE_HARDWARE, null);
-//                }
-//            }
-//        }, 2000);
-
-//        UiHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLoadingLayout.setBackground(mLoadViewRes != null ? mLoadViewRes : new BitmapDrawable(getScreenBitmapFromSystem()));
-//                //SimpleLoadingDialog
-//                mSimpleLoadingDialog = new SimpleLoadingDialog(getContext());
-//                //显示加载框
-//                mSimpleLoadingDialog.showFirst("加载中.....");
-//                mLoadingLayout.setVisibility(VISIBLE);
-//                mLoadingLayout.bringToFront();
-//            }
-//        }, mLoadViewRes != null ? 0 : 360);
-//        UiHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLoadingLayout.setVisibility(GONE);
-//                mSimpleLoadingDialog.dismiss();
-//            }
-//        }, 2000);
-
     }
 
     public void setTabSelectListener(TabSelectListener listener) {
@@ -1529,24 +1495,18 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
         mProgressBar.bringToFront();
         mProgressBar.setVisibility(VISIBLE);
 
-        //SimpleLoadingDialog
-//        if (mSimpleLoadingDialog == null)
-//            mSimpleLoadingDialog = new SimpleLoadingDialog(getContext());
-//        //显示加载框
-//        mSimpleLoadingDialog.showFirst("加载中.....");
     }
 
     @Override
     public void onPageFinished(Tab tab) {
         mProgressBar.setVisibility(INVISIBLE);
-        if (mPagersManagelayout.getVisibility()==GONE){
+        if (mPagersManagelayout.getVisibility() == GONE) {
             tab.shouldUpdateThumbnail(true);
         }
         mTabAdapter.notifyDataSetChanged();
         setBackBtnClickable(mActiveTab.getWebView().canGoBack());
         setForwardBtnClickable(mActiveTab.getWebView().canGoForward());
-        if (mSimpleLoadingDialog != null)
-            mSimpleLoadingDialog.dismiss();
+        DialogUtils.dismissLoadingDialog(mContext);
     }
 
     @Override
@@ -1563,5 +1523,6 @@ public class LimeBrowser extends FrameLayout implements UiController, LimeStackV
     public void onChildDismissed(int index) {
         onTabClosed(index);
     }
+
 
 }
