@@ -1,5 +1,7 @@
 # LimeBrowser(青柠浏览器)：
 
+  ![version](https://img.shields.io/badge/version-3.0.1-brightgreen)
+
 #### Simple Android browser, quickly deployed in your application, the implementation of the application internal browser, support for multi-window management.
 
 [中文文档](https://github.com/YassKnight/LimeBrowser/blob/main/resources/README_zh.md)

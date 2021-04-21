@@ -1,5 +1,7 @@
 # LimeBrowser(青柠浏览器)：
 
+  ![version](https://img.shields.io/badge/version-3.0.1-brightgreen)
+
 #### 简单的Android浏览器，快速部署在您的应用程序中，实现应用程序内部浏览器，支持多窗口管理。
 
 #### 布局 
